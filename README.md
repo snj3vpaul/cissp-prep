@@ -23,6 +23,21 @@ A free, local-first CISSP exam-prep web app. It has original practice questions 
    - Environment variables: **none required**
 3. **Click Deploy.** When the deploy finishes, you can optionally set `NEXT_PUBLIC_SITE_URL` to your production URL. Canonical links, the sitemap and Open Graph tags then use your domain.
 
+## CISSP Pocket Trainer (`/pocket`)
+
+A standalone, phone-first trainer served at `/pocket`. You don't need to log in or build anything: just open it on your phone and add it to your Home Screen.
+
+- **160 original questions** (20 per domain) across 4 tiers: 🌱 Recruit, 🔎 Analyst, 🧭 Manager, 👑 CISO. Auto mode promotes you after 4 of 5 correct and eases you down when you're struggling.
+- **Habit loop:** a small daily goal (5 by default), streaks with freezes, combos and critical-hit XP, a daily Boss question at 3× XP, and a confidence tap (Sure / Think so / Guess) that flags blind spots.
+- **Spaced review** (Leitner boxes) brings misses and lucky guesses back.
+- Progress is stored in `localStorage`. When the page is opened as a Claude artifact, progress also syncs to your Claude account and **Endless mode** generates fresh AI questions.
+
+Edit `pocket/app.html` (UI) or `pocket/qbank.js` (questions, correct answer listed first), then run:
+
+```bash
+npm run build:pocket   # writes public/pocket/index.html
+```
+
 ## Run locally
 
 ```bash

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CISSP Pocket Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f17;--panel:#131a26;--panel2:#1a2333;--line:#26324a;--txt:#e8edf6;--mut:#8b97ad;
+  --acc:#ffb020;--acc2:#ff7a1a;--ok:#2fc57a;--bad:#f0605d;--blue:#5b9dff;
+  --t1:#5fd3a2;--t2:#5b9dff;--t3:#c48bff;--t4:#ff6b8a;
+  --r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 Inter,system-ui,sans-serif}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px 40px;min-height:100vh}
+h1,h2,h3,.disp{font-family:"Space Grotesk",Inter,sans-serif;letter-spacing:-.01em;margin:0}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.hidden{display:none!important}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.mut{color:var(--mut)}
+.sm{font-size:13px}.xs{font-size:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:14px;font-weight:600;font-size:16px;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1000;box-shadow:0 8px 24px -10px var(--acc2)}
+.btn.ghost{background:var(--panel2);border:1px solid var(--line)}
+.btn.small{padding:10px 12px;font-size:14px;width:auto}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:600;background:var(--panel2);border:1px solid var(--line)}
+.t1{color:var(--t1)}.t2{color:var(--t2)}.t3{color:var(--t3)}.t4{color:var(--t4)}
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.stat{display:flex;align-items:center;gap:6px;font-weight:700;font-family:"Space Grotesk"}
+.flame{font-size:20px}
+.flame.dead{filter:grayscale(1);opacity:.5}
+.iconbtn{width:38px;height:38px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font-size:17px}
+/* hero */
+.hero{position:relative;overflow:hidden}
+.hero h2{font-size:22px;margin-bottom:4px}
+.ring{width:84px;height:84px;flex:none}
+.ring circle{fill:none;stroke-width:9}
+.ring .bg{stroke:var(--panel2)}
+.ring .fg{stroke:url(#g);stroke-linecap:round;transition:stroke-dashoffset .6s}
+.ringlbl{position:absolute;inset:0;display:grid;place-items:center;font-family:"Space Grotesk";font-weight:700;font-size:18px}
+.risk{margin-top:10px;padding:8px 12px;border-radius:10px;background:#3a1d0a;color:#ffc58a;font-size:13px}
+/* grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:left;position:relative}
+.tile b{display:block;font-family:"Space Grotesk";font-size:15px;margin-top:4px}
+.tile .em{font-size:22px}
+.tile .badge{position:absolute;top:10px;right:10px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;border-radius:99px;padding:1px 7px}
+.tile.locked{opacity:.45}
+.sect{margin:22px 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600}
+/* tiers */
+.tiers{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.tierb{padding:10px 2px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:600;text-align:center}
+.tierb .e{display:block;font-size:18px}
+.tierb.on{border-color:var(--acc);background:#2a2110}
+/* xp */
+.bar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px;transition:width .6s}
+.dom{display:grid;grid-template-columns:28px 1fr 42px;gap:8px;align-items:center;padding:7px 0;width:100%;text-align:left}
+.dom .n{font-family:"Space Grotesk";font-weight:700;color:var(--mut)}
+.dom .nm{font-size:13px;margin-bottom:4px}
+.dom .pc{text-align:right;font-weight:600;font-size:13px}
+/* quiz */
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.dots{display:flex;gap:5px;flex:1}
+.dots i{flex:1;height:5px;border-radius:9px;background:var(--panel2)}
+.dots i.ok{background:var(--ok)}.dots i.bad{background:var(--bad)}.dots i.cur{background:var(--acc)}
+.stem{font-size:18px;line-height:1.45;font-weight:500;margin:10px 0 16px}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:14px;border-radius:14px;background:var(--panel);border:1.5px solid var(--line);margin-bottom:10px;font-size:15px;transition:border-color .15s,background .15s}
+.opt .L{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--panel2);font-weight:700;font-size:13px;font-family:"Space Grotesk"}
+.opt.sel{border-color:var(--acc);background:#211a0c}
+.opt.right{border-color:var(--ok);background:#0d2a1c}
+.opt.right .L{background:var(--ok);color:#03140b}
+.opt.wrong{border-color:var(--bad);background:#2c1112}
+.opt.wrong .L{background:var(--bad);color:#fff}
+.opt.dim{opacity:.5}
+.conf{position:sticky;bottom:0;padding:12px 0 calc(8px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 25%)}
+.conf .row{gap:8px}
+.conf .btn{padding:14px 6px;font-size:14px}
+.fb{border-radius:14px;padding:14px;margin:6px 0 12px;border:1px solid var(--line);background:var(--panel)}
+.fb h3{font-size:17px;margin-bottom:6px}
+.fb.ok{border-color:#1f6b45}.fb.bad{border-color:#7a2a2a}
+.xpfly{font-family:"Space Grotesk";font-weight:700;color:var(--acc)}
+.crit{color:#ffe14d}
+/* toast */
+#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-140%);background:var(--panel2);border:1px solid var(--acc);padding:10px 16px;border-radius:14px;font-weight:600;z-index:50;transition:transform .35s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
+#toast.show{transform:translate(-50%,0)}
+/* sheet */
+.sheetbg{position:fixed;inset:0;background:#000a;z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--panel);border-top-left-radius:22px;border-top-right-radius:22px;width:100%;max-width:520px;padding:20px 18px calc(24px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;border:1px solid var(--line)}
+.field{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:12px}
+.seg{display:flex;background:var(--panel2);border-radius:10px;padding:3px}
+.seg button{padding:6px 10px;border-radius:8px;font-size:13px;font-weight:600}
+.seg button.on{background:var(--acc);color:#1a1000}
+input[type=date]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;color-scheme:dark}
+/* onboarding */
+.ob{padding-top:30px}
+.ob h1{font-size:30px;line-height:1.15;margin-bottom:10px}
+.lvl{display:flex;gap:14px;align-items:center;width:100%;text-align:left;padding:16px;border-radius:16px;background:var(--panel);border:1.5px solid var(--line);margin-bottom:10px}
+.lvl .e{font-size:28px}
+.lvl b{font-family:"Space Grotesk";font-size:16px;display:block}
+.big{font-size:44px;font-family:"Space Grotesk";font-weight:700;line-height:1}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+.pulse{animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 8px 24px -10px var(--acc2)}50%{box-shadow:0 8px 34px -4px var(--acc2)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.pop{animation:pop .35s cubic-bezier(.2,1.5,.4,1)}
+.sync{font-size:11px;color:var(--mut)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#ffb020"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient></defs></svg>
+<div class="wrap" id="app"></div>
+<div id="toast"></div>
+<canvas class="confetti" id="cf"></canvas>
+
+<script>
+/*QBANK*/
+</script>
+<script>
+(function(){
+"use strict";
+const DOMS={1:["Security & Risk Mgmt",16],2:["Asset Security",10],3:["Architecture & Engineering",13],4:["Network Security",13],5:["Identity & Access",13],6:["Assessment & Testing",12],7:["Security Operations",13],8:["Software Dev Security",10]};
+const TIERS={1:["Recruit","🌱","Recall the concept"],2:["Analyst","🔎","Apply it"],3:["Manager","🧭","BEST / FIRST / MOST"],4:["CISO","👑","Tricky, exam-hard"]};
+const RANKS=[[0,"Recruit"],[300,"Analyst"],[800,"Engineer"],[1600,"Architect"],[3000,"Manager"],[5000,"Director"],[8000,"CISO"],[12000,"Exam-Ready"]];
+const TIPS=["Think like a manager: people first, then process, then technology.","On ‘FIRST’ questions, pick the step that understands the problem before the one that fixes it.","Senior management owns risk. Security advises, and doesn’t decide.","If an answer is purely technical and another addresses policy or governance, look twice at the governance one.","Life safety beats everything, including evidence, uptime and money.","‘BEST’ means the most complete answer, not the one that’s merely true.","A control should never cost more than what it protects.","Watch for absolutes like ‘always’ and ‘immediately’. They’re usually traps.","Contain before you eradicate, and collect evidence before you wipe.","Owners decide, custodians implement, users comply."];
+const Q=QB.map((r,i)=>({id:"q"+i,d:r[0],t:r[1],s:r[2],o:r[3],w:r[4]}));
+const byId={};Q.forEach(q=>byId[q.id]=q);
+
+/* ---------- state ---------- */
+const KEY="cissp-pocket-v1";
+const blank=()=>({v:1,updated:0,xp:0,tier:1,th:[],streak:0,best:0,lastGoal:-9,freezes:0,goal:5,days:{},dom:{},seen:{},boss:-1,exam:"",onboard:false,conf:true,ai:{},answered:0,bestCombo:0});
+let S=blank();
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(blank(),JSON.parse(raw));}catch(e){}
+const today=()=>{const d=new Date();return Math.floor((d-d.getTimezoneOffset()*60000)/864e5)};
+let dbRef=null,saveT=null,syncState="";
+function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  if(dbRef){clearTimeout(saveT);saveT=setTimeout(async()=>{try{await dbRef.set({json:JSON.stringify(S),updated:S.updated});syncState="☁︎ Synced";}catch(e){syncState="";}const el=document.getElementById("sync");if(el)el.textContent=syncState;},800)}}
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+function toast(msg,ms=2200){const t=$("#toast");t.innerHTML=msg;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),ms)}
+function rankOf(xp){let r=RANKS[0],n=null;for(let i=0;i<RANKS.length;i++){if(xp>=RANKS[i][0]){r=RANKS[i];n=RANKS[i+1]||null}}return{name:r[1],from:r[0],next:n}}
+function liveStreak(){const t=today();if(S.lastGoal>=t-1)return S.streak;if(S.lastGoal===t-2&&S.freezes>0)return S.streak;return 0}
+function todayCount(){return S.days[today()]||0}
+function domAcc(d){const x=S.dom[d];return x&&x.a?x.c/x.a:null}
+function readiness(){let s=0;for(const d in DOMS){const x=S.dom[d];if(!x||!x.a)continue;const acc=x.c/x.a,cov=Math.min(1,x.a/15);s+=DOMS[d][1]*acc*cov}return Math.round(s)}
+function dueIds(){const t=today();return Object.keys(S.seen).filter(id=>S.seen[id].due<=t&&(byId[id]||S.ai[id])).sort((a,b)=>S.seen[a].due-S.seen[b].due)}
+function getQ(id){return byId[id]||S.ai[id]}
+function weakest(){let best=null,v=2;for(const d in DOMS){const a=domAcc(d);const score=a===null?0.55:a;if(score<v){v=score;best=+d}}return best||1}
+
+/* ---------- pick questions ---------- */
+function pickFrom(pool,n,exclude){
+  const ex=new Set(exclude||[]);pool=pool.filter(q=>!ex.has(q.id));
+  const unseen=shuffle(pool.filter(q=>!S.seen[q.id]));
+  const seen=pool.filter(q=>S.seen[q.id]).sort((a,b)=>(S.seen[a.id].last||0)-(S.seen[b.id].last||0));
+  // weight unseen toward weak domains
+  unseen.sort((a,b)=>((domAcc(a.d)??.55)-(domAcc(b.d)??.55))+(Math.random()-.5)*.6);
+  const all=unseen.concat(seen),out=[],per={};
+  for(const q of all){if(out.length>=n)break;if((per[q.d]||0)<2){out.push(q);per[q.d]=(per[q.d]||0)+1}}
+  for(const q of all){if(out.length>=n)break;if(!out.includes(q))out.push(q)}
+  return out;
+}
+function buildSet(mode,arg){
+  const n=mode==="one"?1:(mode==="boss"?1:5);
+  if(mode==="boss"){const t4=Q.filter(q=>q.t===4);return [t4[today()%t4.length]]}
+  if(mode==="review"){return dueIds().slice(0,10).map(getQ)}
+  if(mode==="domain"){const pool=Q.filter(q=>q.d===arg);const out=[];[1,2,3,4].forEach(t=>out.push(...pickFrom(pool.filter(q=>q.t===t),2)));return shuffle(out).sort((a,b)=>a.t-b.t).slice(0,6)}
+  const tier=mode==="tier"?arg:S.tier;
+  const out=[];
+  if(mode!=="tier"&&mode!=="one"){out.push(...dueIds().slice(0,2).map(getQ))}
+  const ids=out.map(q=>q.id);
+  const stretch=(mode==="auto"&&tier<4&&n>1)?1:0;
+  out.push(...pickFrom(Q.filter(q=>q.t===tier),n-out.length-stretch,ids));
+  if(stretch)out.push(...pickFrom(Q.filter(q=>q.t===tier+1),1,out.map(q=>q.id)));
+  if(out.length<n)out.push(...pickFrom(Q,n-out.length,out.map(q=>q.id)));
+  return out.slice(0,n);
+}
+
+/* ---------- session ---------- */
+let R=null; // running session
+function start(mode,arg){
+  const set=buildSet(mode,arg);
+  if(!set.length){toast(mode==="review"?"🎉 Nothing to review — you’re clean!":"No questions here yet");return}
+  R={mode,arg,set,i:0,res:[],xp:0,combo:0,maxCombo:0,stage:"q",sel:null,order:null,startTier:S.tier,goalHitBefore:todayCount()>=S.goal};
+  prepQ();render();window.scrollTo(0,0);
+}
+function prepQ(){const q=R.set[R.i];R.order=shuffle([0,1,2,3]);R.sel=null;R.stage="q";R.q=q}
+function answer(conf){
+  const q=R.q,ok=R.sel===0,t=today();
+  // xp
+  let xp=0,crit=false,base=10*q.t*(R.mode==="boss"?3:1);
+  if(ok){R.combo++;R.maxCombo=Math.max(R.maxCombo,R.combo);
+    xp=Math.round(base*(conf==="sure"?1.5:conf==="guess"?0.6:1))+Math.min(R.combo-1,5)*2;
+    if(Math.random()<.12){xp*=2;crit=true}}
+  else{R.combo=0;xp=2}
+  S.xp+=xp;R.xp+=xp;
+  // stats
+  const dm=S.dom[q.d]||(S.dom[q.d]={a:0,c:0});dm.a++;if(ok)dm.c++;
+  S.days[t]=(S.days[t]||0)+1;S.answered++;
+  // leitner
+  const sv=S.seen[q.id]||{b:0,c:0,w:0};const gaps=[1,2,4,7,14,30];
+  if(ok&&conf!=="guess"){sv.b=Math.min(sv.b+1,5);sv.due=t+gaps[sv.b];sv.c++}
+  else if(ok){sv.due=t+1;sv.c++}
+  else{sv.b=0;sv.due=t;sv.w++}
+  sv.last=Date.now();S.seen[q.id]=sv;
+  if(q.ai&&ok&&conf!=="guess"&&sv.b>=2){/* graduate ai q from storage */}
+  // auto tier ladder
+  let tierMsg="";
+  if(q.t===S.tier&&(R.mode==="auto"||R.mode==="one")){
+    S.th.push(ok?1:0);S.th=S.th.slice(-5);const c=S.th.reduce((a,b)=>a+b,0);
+    if(S.th.length>=5&&c>=4&&S.tier<4){S.tier++;S.th=[];tierMsg="up"}
+    else if(S.th.length>=4&&S.th.slice(-4).reduce((a,b)=>a+b,0)<=1&&S.tier>1){S.tier--;S.th=[];tierMsg="down"}
+  }
+  // streak
+  let streakMsg="";
+  if(S.days[t]>=S.goal&&S.lastGoal!==t){
+    if(S.lastGoal===t-1)S.streak++;
+    else if(S.lastGoal===t-2&&S.freezes>0){S.freezes--;S.streak++;streakMsg="🧊 Streak freeze used — streak saved!"}
+    else S.streak=1;
+    S.lastGoal=t;S.best=Math.max(S.best,S.streak);
+    if(S.streak%7===0&&S.freezes<2){S.freezes++;streakMsg="🧊 7-day bonus: +1 streak freeze"}
+    R.goalJustHit=true;
+  }
+  S.bestCombo=Math.max(S.bestCombo,R.maxCombo);
+  if(R.mode==="boss")S.boss=t;
+  R.res.push({ok,conf,xp,crit,q});
+  R.stage="fb";R.last={ok,conf,xp,crit};
+  save();
+  buzz(ok?20:[30,60,30]);
+  render();
+  if(tierMsg==="up")setTimeout(()=>{toast(`🚀 Promoted to <b>${TIERS[S.tier][0]}</b> tier!`,2600);confetti()},300);
+  else if(tierMsg==="down")setTimeout(()=>toast(`Easing to ${TIERS[S.tier][0]} tier to rebuild momentum 💪`),300);
+  if(R.goalJustHit&&!R.goalShown){R.goalShown=true;setTimeout(()=>{toast(`🔥 Daily goal hit! ${S.streak}-day streak`,2600);confetti()},tierMsg?2800:400)}
+  if(streakMsg)setTimeout(()=>toast(streakMsg,2600),5600);
+  const fbEl=document.getElementById("fb");if(fbEl)setTimeout(()=>fbEl.scrollIntoView({behavior:"smooth",block:"nearest"}),60);
+}
+function next(){
+  R.i++;
+  if(R.i<R.set.length){prepQ();render();window.scrollTo(0,0);return}
+  R.stage="done";render();window.scrollTo(0,0);
+  const sc=R.res.filter(r=>r.ok).length;if(sc===R.res.length&&R.res.length>=3)confetti();
+}
+
+/* ---------- AI endless ---------- */
+let sampleFn=null,aiNext=null,aiBusy=false,capsDone=false;
+async function genAI(){
+  const d=weakest(),t=Math.min(4,Math.max(2,S.tier));
+  const prompt=`Write ONE original CISSP practice question (not copied from any published question bank).
+Domain: ${d} — ${DOMS[d][0]} (current ISC2 CISSP exam outline).
+Difficulty tier: ${TIERS[t][0]} — ${t===2?"apply a concept to a short scenario":t===3?"manager mindset: BEST/FIRST/MOST question where several options are plausible":"exam-hard: subtle distinctions, scenario-based, plausible distractors"}.
+Avoid these already-covered topics: ${shuffle(Q.filter(q=>q.d===d)).slice(0,6).map(q=>q.s.slice(0,50)).join(" | ")}.
+Rules: four options, exactly one defensibly correct; distractors plausible; options similar length; no "all of the above". Rationale: 2 short sentences explaining why correct and why the most tempting distractor is wrong. Be factually precise.
+Return ONLY JSON: {"stem":"...","correct":"...","wrong":["...","...","..."],"why":"..."}`;
+  const j=await sampleFn.json(prompt,{modelTier:"default",cache:false});
+  if(!j||!j.stem||!j.correct||!Array.isArray(j.wrong)||j.wrong.length<3)throw new Error("bad");
+  const id="ai"+Date.now().toString(36);
+  return {id,d,t,s:String(j.stem),o:[String(j.correct)].concat(j.wrong.slice(0,3).map(String)),w:String(j.why||""),ai:true};
+}
+async function startAI(){
+  if(!sampleFn||aiBusy)return;
+  R={mode:"ai",set:[],i:0,res:[],xp:0,combo:0,maxCombo:0,stage:"load",startTier:S.tier};render();
+  try{aiBusy=true;const q=aiNext||await genAI();aiNext=null;aiBusy=false;R.set=[q];R.q=q;R.order=shuffle([0,1,2,3]);R.sel=null;R.stage="q";render();prefetchAI()}
+  catch(e){aiBusy=false;R=null;render();toast(e&&e.code==="rate_limited"?"Claude is busy — try again in a minute":"Couldn’t generate a question right now")}
+}
+async function prefetchAI(){if(aiNext||aiBusy||!sampleFn)return;try{aiBusy=true;aiNext=await genAI()}catch(e){}aiBusy=false}
+function aiMore(){
+  // keep missed AI questions for review
+  R.res.forEach(r=>{if(r.q.ai&&!r.ok){S.ai[r.q.id]=r.q;const ks=Object.keys(S.ai);if(ks.length>60)delete S.ai[ks[0]]}});save();
+  if(aiNext){const q=aiNext;aiNext=null;R.set.push(q);R.i++;R.q=q;R.order=shuffle([0,1,2,3]);R.sel=null;R.stage="q";render();window.scrollTo(0,0);prefetchAI()}
+  else{R.stage="load";render();(async()=>{try{aiBusy=true;const q=await genAI();aiBusy=false;R.set.push(q);R.i++;R.q=q;R.order=shuffle([0,1,2,3]);R.sel=null;R.stage="q";render();prefetchAI()}catch(e){aiBusy=false;R.stage="done";render()}})()}
+}
+
+/* ---------- render ---------- */
+function ringSvg(frac,label){const C=2*Math.PI*36;return `<div style="position:relative" class="ring"><svg viewBox="0 0 84 84" class="ring"><circle class="bg" cx="42" cy="42" r="36"/><circle class="fg" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-Math.min(1,frac))}" transform="rotate(-90 42 42)"/></svg><div class="ringlbl">${label}</div></div>`}
+
+function renderOnboard(){
+  return `<div class="ob">
+  <div class="chip" style="margin-bottom:16px">🔐 CISSP Pocket Trainer</div>
+  <h1>3 minutes a day.<br>On your phone.<br>No laptop needed.</h1>
+  <p class="mut">${Q.length} original questions across all 8 domains and 4 difficulty tiers. The tier adjusts to you as you go. Where’s your security experience today?</p>
+  <div style="margin-top:18px">
+  ${[[1,"New to security","Start with the core concepts"],[2,"Some IT / security work","Apply concepts to scenarios"],[3,"Security pro, 3+ yrs","Manager-mindset questions"],[4,"Senior / exam-week","Hard questions only"]].map(([t,a,b])=>`<button class="lvl" data-act="level" data-t="${t}"><span class="e">${TIERS[t][1]}</span><span><b>${a}</b><span class="mut sm">${b} · ${TIERS[t][0]} tier</span></span></button>`).join("")}
+  </div></div>`;
+}
+
+function renderHome(){
+  const st=liveStreak(),tc=todayCount(),rk=rankOf(S.xp),due=dueIds().length,t=today();
+  const atRisk=st>0&&S.lastGoal===t-1&&tc<S.goal;
+  const pct=rk.next?(S.xp-rk.from)/(rk.next[0]-rk.from):1;
+  const rd=readiness();
+  let examLine="";
+  if(S.exam){const ed=Math.floor(new Date(S.exam+"T00:00:00").getTime()/864e5)-Math.floor(new Date(new Date().toDateString()).getTime()/864e5);
+    if(ed>=0){const left=Math.max(0,Q.length-Object.keys(S.seen).filter(k=>byId[k]).length);examLine=`<div class="chip" style="margin-top:10px">📅 Exam in ${ed} day${ed===1?"":"s"}${left?` · ${Math.ceil(left/Math.max(1,ed))} new q/day covers the bank`:""}</div>`}}
+  const bossDone=S.boss===t;
+  return `
+  <div class="top">
+    <div class="stat"><span class="flame ${st?"":"dead"}">🔥</span>${st}<span class="mut xs" style="font-weight:500">${S.freezes?` 🧊${S.freezes}`:""}</span></div>
+    <div class="stat"><span style="color:var(--acc)">⚡</span>${S.xp.toLocaleString()} XP</div>
+    <button class="iconbtn" data-act="settings" aria-label="Settings">⚙︎</button>
+  </div>
+
+  <div class="card hero">
+    <div class="row between">
+      <div>
+        <div class="mut sm">${tc>=S.goal?"Daily goal done ✓":"Today’s mission"}</div>
+        <h2>${tc>=S.goal?"Bonus round?":tc?`${S.goal-tc} more to keep the 🔥`:`Answer ${S.goal} questions`}</h2>
+        <div class="mut sm">≈ ${Math.max(1,Math.round((S.goal-Math.min(tc,S.goal))*0.6))||1} min · ${TIERS[S.tier][1]} ${TIERS[S.tier][0]} tier</div>
+      </div>
+      ${ringSvg(tc/S.goal,`${Math.min(tc,S.goal)}/${S.goal}`)}
+    </div>
+    ${atRisk?`<div class="risk">⚠️ Your ${st}-day streak ends at midnight. Answer ${S.goal-tc} more question${S.goal-tc>1?"s":""} to keep it.</div>`:""}
+    ${examLine}
+    <div style="margin-top:14px"><button class="btn primary pulse" data-act="go" data-m="auto">▶ Start 5-question sprint</button></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn ghost small" style="flex:1" data-act="go" data-m="one">⚡ Just 1 question</button>
+      ${due?`<button class="btn ghost small" style="flex:1" data-act="go" data-m="review">🔁 Review ${due}</button>`:""}
+    </div>
+  </div>
+
+  <div class="sect">Pick your challenge</div>
+  <div class="grid2">
+    <button class="tile ${bossDone?"locked":""}" data-act="${bossDone?"":"go"}" data-m="boss"><span class="em">👑</span><b>Boss of the Day</b><span class="mut xs">${bossDone?"Beaten. Back tomorrow":"1 CISO question · 3× XP"}</span></button>
+    <button class="tile" data-act="go" data-m="review">${due?`<span class="badge">${due}</span>`:""}<span class="em">🔁</span><b>Fix my misses</b><span class="mut xs">${due?"Spaced review is due":"All clear for now"}</span></button>
+    <button class="tile" data-act="go" data-m="domain" data-a="${weakest()}"><span class="em">🎯</span><b>Weakest domain</b><span class="mut xs">D${weakest()} ${DOMS[weakest()][0]}</span></button>
+    <button class="tile ${sampleFn?"":"locked"}" data-act="ai"><span class="em">♾️</span><b>Endless mode</b><span class="mut xs">${sampleFn?"Claude writes fresh questions":capsDone?"Open in the Claude app":"Loading…"}</span></button>
+  </div>
+
+  <div class="sect">Choose a difficulty</div>
+  <div class="tiers">
+    <button class="tierb ${"on"}" data-act="go" data-m="auto"><span class="e">🎚️</span>Auto</button>
+    ${[1,2,3,4].map(t=>`<button class="tierb" data-act="go" data-m="tier" data-a="${t}"><span class="e">${TIERS[t][1]}</span><span class="t${t}">${TIERS[t][0]}</span></button>`).join("")}
+  </div>
+  <p class="mut xs" style="margin:8px 2px 0">Auto moves you up a tier when you get 4 of 5 right and eases you down when you’re struggling. Each sprint includes one stretch question from the tier above.</p>
+
+  <div class="sect">Your rank</div>
+  <div class="card">
+    <div class="row between"><h3>${rk.name}</h3><span class="mut sm">${rk.next?`${rk.next[0]-S.xp} XP to ${rk.next[1]}`:"Max rank 🏆"}</span></div>
+    <div class="bar" style="margin:10px 0 14px"><i style="width:${Math.round(pct*100)}%"></i></div>
+    <div class="row between sm"><span class="mut">Exam readiness (estimate)</span><b>${rd}%</b></div>
+    <div class="bar" style="margin-top:6px"><i style="width:${rd}%;background:linear-gradient(90deg,var(--blue),var(--t3))"></i></div>
+    <div class="row between xs mut" style="margin-top:10px"><span>Best streak ${S.best}</span><span>Best combo ×${S.bestCombo}</span><span>${S.answered} answered</span></div>
+  </div>
+
+  <div class="sect">Domain mastery · tap to drill</div>
+  <div class="card" style="padding:8px 14px">
+    ${Object.keys(DOMS).map(d=>{const a=domAcc(d),x=S.dom[d];return `<button class="dom" data-act="go" data-m="domain" data-a="${d}"><span class="n">D${d}</span><span><div class="nm">${DOMS[d][0]} <span class="mut xs">${DOMS[d][1]}%</span></div><div class="bar"><i style="width:${a===null?0:Math.round(a*100)}%;background:${a===null?"":a>=.75?"var(--ok)":a>=.55?"var(--acc)":"var(--bad)"}"></i></div></span><span class="pc ${a===null?"mut":""}">${a===null?"—":Math.round(a*100)+"%"}</span></button>`}).join("")}
+  </div>
+  <p class="mut xs" style="text-align:center;margin-top:18px">💡 ${TIPS[t%TIPS.length]}</p>
+  <p class="sync" id="sync" style="text-align:center">${syncState}</p>`;
+}
+
+function renderQuiz(){
+  if(R.stage==="load")return `<div class="qhead"><button class="iconbtn" data-act="quit">✕</button><span class="chip">♾️ Endless</span></div><div class="card" style="text-align:center;padding:40px 16px"><div class="big pop">✍️</div><p>Claude is writing a fresh question for <b>D${weakest()}</b>…</p><p class="mut sm">${TIPS[Math.floor(Math.random()*TIPS.length)]}</p></div>`;
+  const q=R.q,L="ABCD";
+  const total=R.mode==="ai"?R.set.length:R.set.length;
+  const dots=R.mode==="ai"?"":R.set.map((_,k)=>{const r=R.res[k];return `<i class="${r?(r.ok?"ok":"bad"):k===R.i?"cur":""}"></i>`}).join("");
+  const opts=R.order.map((oi,k)=>{
+    let cls="";
+    if(R.stage==="fb"){if(oi===0)cls="right";else if(oi===R.sel)cls="wrong";else cls="dim"}
+    else if(R.sel===oi)cls="sel";
+    return `<button class="opt ${cls}" data-act="${R.stage==="q"?"pick":""}" data-o="${oi}"><span class="L">${L[k]}</span><span>${esc(q.o[oi])}</span></button>`}).join("");
+  let bottom="";
+  if(R.stage==="q"){
+    if(R.sel!==null){
+      bottom=S.conf?`<div class="conf"><div class="mut xs" style="text-align:center;margin-bottom:6px">How confident are you? Calling it right earns bonus XP</div><div class="row">
+      <button class="btn ghost" data-act="ans" data-c="guess">🤞 Guess</button>
+      <button class="btn ghost" data-act="ans" data-c="think">🤔 Think so</button>
+      <button class="btn primary" data-act="ans" data-c="sure">🔒 Sure</button></div></div>`
+      :`<div class="conf"><button class="btn primary" data-act="ans" data-c="think">Lock it in</button></div>`;
+    }
+  }else{
+    const l=R.last;
+    const head=l.ok?(l.conf==="guess"?"✅ Right, but it was a guess, so you’ll see it again":"✅ Correct"):(l.conf==="sure"?"❌ Blind spot: you were sure":"❌ Not quite");
+    const lastQ=R.mode==="ai"?false:R.i===R.set.length-1;
+    bottom=`<div class="fb ${l.ok?"ok":"bad"} pop" id="fb">
+      <div class="row between"><h3>${head}</h3><span class="xpfly ${l.crit?"crit":""}">${l.crit?"⚡CRIT ":""}+${l.xp}</span></div>
+      ${R.combo>1?`<div class="xs" style="color:var(--acc);margin-bottom:6px">🔥 Combo ×${R.combo}</div>`:""}
+      <div class="sm">${esc(q.w)}</div>
+      ${q.ai?`<div class="mut xs" style="margin-top:8px">AI-generated question. If the rationale looks off, check it against your book.</div>`:""}
+    </div>
+    <div class="conf">${R.mode==="ai"?`<div class="row"><button class="btn ghost" data-act="aidone">Done</button><button class="btn primary" data-act="aimore">Next ♾️</button></div>`
+      :R.mode==="one"?`<div class="row"><button class="btn ghost" data-act="home">Done</button><button class="btn primary" data-act="one">One more →</button></div>`
+      :`<button class="btn primary" data-act="next">${lastQ?"See results":"Next →"}</button>`}</div>`;
+  }
+  return `<div class="qhead"><button class="iconbtn" data-act="quit" aria-label="Quit">✕</button><div class="dots">${dots}</div>${R.mode==="ai"?`<span class="chip">♾️ ${R.res.filter(r=>r.ok).length}/${R.res.length}</span>`:""}</div>
+  <div class="row" style="gap:6px;flex-wrap:wrap"><span class="chip t${q.t}">${TIERS[q.t][1]} ${TIERS[q.t][0]}</span><span class="chip">D${q.d} · ${DOMS[q.d][0]}</span>${R.mode==="boss"?`<span class="chip" style="color:var(--acc)">👑 3× XP</span>`:""}${S.seen[q.id]&&R.stage==="q"?`<span class="chip">🔁 review</span>`:""}</div>
+  <div class="stem">${esc(q.s)}</div>${opts}${bottom}`;
+}
+
+function renderDone(){
+  const n=R.res.length,c=R.res.filter(r=>r.ok).length,tc=todayCount(),blind=R.res.filter(r=>!r.ok&&r.conf==="sure").length,lucky=R.res.filter(r=>r.ok&&r.conf==="guess").length;
+  const pct=n?c/n:0;
+  const title=pct===1?"Flawless 🏆":pct>=.8?"Strong work 💪":pct>=.6?"Solid 👍":"Good reps 🧠";
+  const w=weakest();
+  return `<div style="padding-top:24px;text-align:center">
+    <div class="big pop">${c}/${n}</div>
+    <h2 style="margin:8px 0 4px">${title}</h2>
+    <div class="xpfly" style="font-size:20px">+${R.xp} XP</div>
+    <div class="row" style="justify-content:center;margin:14px 0;gap:6px;flex-wrap:wrap">
+      <span class="chip">🔥 ${liveStreak()}-day streak</span>
+      <span class="chip">Combo ×${R.maxCombo}</span>
+      ${S.tier!==R.startTier?`<span class="chip" style="color:var(--acc)">${S.tier>R.startTier?"🚀 Now":"↘ Now"} ${TIERS[S.tier][0]}</span>`:""}
+    </div>
+  </div>
+  ${blind||lucky?`<div class="card sm" style="margin-bottom:12px">${blind?`<div>🎯 <b>${blind} blind spot${blind>1?"s":""}</b>: you were sure and wrong. These are the most valuable questions to review.</div>`:""}${lucky?`<div style="margin-top:${blind?6:0}px">🤞 <b>${lucky} lucky guess${lucky>1?"es":""}</b> will come back tomorrow.</div>`:""}</div>`:""}
+  <div class="card" style="margin-bottom:14px">
+    ${R.res.map(r=>`<div class="row" style="align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line)"><span>${r.ok?"✅":"❌"}</span><span class="sm">${esc(r.q.s.length>90?r.q.s.slice(0,88)+"…":r.q.s)}</span></div>`).join("")}
+  </div>
+  ${tc<S.goal?`<button class="btn primary pulse" data-act="go" data-m="auto">Keep going: ${S.goal-tc} more saves today’s 🔥</button>`
+   :`<button class="btn primary" data-act="go" data-m="auto">Another sprint (+XP)</button>`}
+  <div class="row" style="margin-top:8px">
+    <button class="btn ghost small" style="flex:1" data-act="go" data-m="domain" data-a="${w}">🎯 Drill D${w}</button>
+    <button class="btn ghost small" style="flex:1" data-act="home">Done for now</button>
+  </div>
+  <p class="mut xs" style="text-align:center;margin-top:16px">Tomorrow: ${dueIdsTomorrow()} review${dueIdsTomorrow()===1?"":"s"} + new ${TIERS[S.tier][0]} questions. Same time?</p>`;
+}
+function dueIdsTomorrow(){const t=today()+1;return Object.values(S.seen).filter(s=>s.due<=t).length}
+
+function renderSettings(){
+  return `<div class="sheetbg" data-act="closeset"><div class="sheet" data-stop="1">
+    <div class="row between" style="margin-bottom:6px"><h2>Settings</h2><button class="iconbtn" data-act="closeset">✕</button></div>
+    <div class="field"><span>Daily goal</span><div class="seg">${[3,5,10,20].map(g=>`<button class="${S.goal===g?"on":""}" data-act="goal" data-g="${g}">${g}</button>`).join("")}</div></div>
+    <div class="field"><span>Confidence check<br><span class="mut xs">Rate how sure you are before each reveal</span></span><div class="seg"><button class="${S.conf?"on":""}" data-act="conf" data-v="1">On</button><button class="${!S.conf?"on":""}" data-act="conf" data-v="0">Off</button></div></div>
+    <div class="field"><span>Auto tier now</span><div class="seg">${[1,2,3,4].map(t=>`<button class="${S.tier===t?"on":""}" data-act="settier" data-t="${t}">${TIERS[t][1]}</button>`).join("")}</div></div>
+    <div class="field"><span>Exam date</span><input type="date" id="examdate" value="${S.exam||""}"></div>
+    <div class="field"><span class="sm mut">Bank: ${Q.length} questions · seen ${Object.keys(S.seen).filter(k=>byId[k]).length}</span><button class="btn ghost small" data-act="reset">Reset progress</button></div>
+    <p class="mut xs" style="margin-top:14px">📱 Put this page on your Home Screen so it’s one tap away, like an app. Progress syncs to your Claude account when you’re signed in, and is also kept on this device.</p>
+  </div></div>`;
+}
+
+let showSettings=false,confirmReset=false;
+function render(){
+  const app=$("#app");
+  let h;
+  if(!S.onboard)h=renderOnboard();
+  else if(R&&R.stage==="done")h=renderDone();
+  else if(R)h=renderQuiz();
+  else h=renderHome();
+  if(showSettings)h+=renderSettings();
+  app.innerHTML=h;
+  const ed=document.getElementById("examdate");if(ed)ed.addEventListener("change",e=>{S.exam=e.target.value;save()});
+}
+
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");
+  if(!el){return}
+  if(el.dataset.act==="closeset"&&e.target.closest("[data-stop]")&&!e.target.closest(".iconbtn"))return;
+  const a=el.dataset.act;
+  switch(a){
+    case"level":S.tier=+el.dataset.t;S.onboard=true;save();start("one");toast("First question. Takes 30 seconds 👇");break;
+    case"go":{const m=el.dataset.m,arg=el.dataset.a?+el.dataset.a:undefined;R=null;start(m,arg);break}
+    case"one":R=null;start("one");break;
+    case"pick":R.sel=+el.dataset.o;buzz(8);render();if(!S.conf){}setTimeout(()=>{const c=document.querySelector(".conf");c&&c.scrollIntoView({behavior:"smooth",block:"nearest"})},30);break;
+    case"ans":answer(el.dataset.c);break;
+    case"next":next();break;
+    case"quit":case"home":if(R&&R.mode==="ai")aiMore&&R.res.forEach(r=>{if(r.q.ai&&!r.ok)S.ai[r.q.id]=r.q});save();R=null;render();window.scrollTo(0,0);break;
+    case"ai":if(sampleFn)startAI();else toast(capsDone?"Endless mode works when this page is opened in the Claude app":"Still loading. Try again in a second");break;
+    case"aimore":aiMore();break;
+    case"aidone":R.res.forEach(r=>{if(r.q.ai&&!r.ok)S.ai[r.q.id]=r.q});save();R.stage="done";render();break;
+    case"settings":showSettings=true;render();break;
+    case"closeset":showSettings=false;confirmReset=false;render();break;
+    case"goal":S.goal=+el.dataset.g;save();render();break;
+    case"conf":S.conf=el.dataset.v==="1";save();render();break;
+    case"settier":S.tier=+el.dataset.t;S.th=[];save();render();break;
+    case"reset":if(!confirmReset){confirmReset=true;el.textContent="Tap again to confirm";el.style.color="var(--bad)";}else{S=blank();S.onboard=false;confirmReset=false;showSettings=false;save();R=null;render()}break;
+  }
+});
+
+/* ---------- confetti ---------- */
+function confetti(){const c=$("#cf"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+  const cols=["#ffb020","#ff7a1a","#2fc57a","#5b9dff","#c48bff","#ff6b8a"];
+  const P=Array.from({length:90},()=>({x:innerWidth/2+(Math.random()-.5)*80,y:innerHeight*.35,vx:(Math.random()-.5)*10,vy:-Math.random()*11-3,r:Math.random()*6+3,c:cols[Math.floor(Math.random()*6)],a:Math.random()*6}));
+  let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6);x.restore()});if(++f<90)requestAnimationFrame(tick);else x.clearRect(0,0,c.width,c.height)})()}
+
+render();
+
+/* ---------- capabilities: sync + AI ---------- */
+(async()=>{
+  try{
+    if(!window.claude||!window.claude.use){capsDone=true;if(!R)render();return}
+    const [db,user,sample]=await Promise.all([claude.use("db").catch(()=>null),claude.use("user").catch(()=>null),claude.use("sample").catch(()=>null)]);
+    capsDone=true;if(!sample&&!R)render();
+    if(sample){sampleFn=sample;if(!R)render()}
+    if(db&&user){
+      const id=await user.id();if(!id)return;
+      const ref=db.doc("data/users/"+id+"/state");
+      const got=await Promise.race([ref.get(),new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),10000))]);
+      let remote=null;
+      if(got){const v=typeof got.data==="function"?got.data():(got.data!==undefined?got.data:got);if(v&&v.json)remote=v}
+      dbRef=ref;
+      if(remote&&remote.updated>S.updated){try{S=Object.assign(blank(),JSON.parse(remote.json));localStorage.setItem(KEY,remote.json)}catch(e){} syncState="☁︎ Synced";if(!R)render()}
+      else if(S.onboard){save()}
+      else syncState="☁︎ Sync on";
+      const el=document.getElementById("sync");if(el)el.textContent=syncState;
+    }
+  }catch(e){}
+})();
+})();
+</script>
+</body>
+</html>
