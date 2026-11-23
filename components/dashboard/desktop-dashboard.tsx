@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { CalendarClock, SlidersHorizontal } from "lucide-react";
 import type { AppState } from "@/lib/types";
-import { DOMAINS } from "@/lib/domains";
 import { actions } from "@/lib/store";
 import { todayISO } from "@/lib/sm2";
 import { layoutActions, useLayoutPrefs } from "@/lib/layout-prefs";
 import { EffortSlider } from "@/components/knowledge/effort-slider";
 import { SpacingToolbar } from "@/components/dashboard/spacing-toolbar";
 import { SessionHistory } from "@/components/dashboard/session-history";
+import { DomainRow } from "@/components/mastery/domain-row";
 import type { DashboardData } from "@/components/dashboard/data";
 import { cn } from "@/lib/utils";
 
@@ -171,26 +171,16 @@ export function DesktopDashboard({ state, d }: { state: AppState; d: DashboardDa
             <Panel>
               <div className="flex items-baseline justify-between">
                 <p className="text-sm font-semibold">Domains</p>
-                <p className="text-xs text-muted-foreground">readiness</p>
+                <Link href="/mastery" className="text-xs text-muted-foreground hover:text-foreground">
+                  Mastery model →
+                </Link>
               </div>
-              <ul className="mt-3">
-                {d.stats.map((s) => {
-                  const dom = DOMAINS[s.domain - 1];
-                  return (
-                    <li key={dom.id}>
-                      <Link href={`/quiz/${dom.slug}`} className="flex h-10 items-center gap-3 rounded-lg px-1.5 text-sm hover:bg-muted">
-                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[10px] font-semibold text-white" style={{ background: dom.color }}>
-                          {dom.id}
-                        </span>
-                        <span className="min-w-0 flex-1 truncate">{dom.short}</span>
-                        <span className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
-                          <span className="block h-full rounded-full" style={{ width: `${s.readiness}%`, background: dom.color }} />
-                        </span>
-                        <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">{s.attempted ? `${s.readiness}%` : "—"}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
+              <ul className="mt-3 -mx-2">
+                {d.mastery.domains.map((r) => (
+                  <li key={r.domain.id}>
+                    <DomainRow row={r} compact />
+                  </li>
+                ))}
               </ul>
             </Panel>
           </div>

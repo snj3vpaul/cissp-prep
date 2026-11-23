@@ -10,6 +10,7 @@ import { todayISO } from "@/lib/sm2";
 import { levelFromXp } from "@/lib/level";
 import { dueCardCount, dueForecast, xpSince } from "@/lib/derived";
 import { recommendedLevel } from "@/lib/knowledge-check";
+import { masteryModel } from "@/lib/mastery";
 
 export function lastNDays(n: number) {
   const now = new Date();
@@ -56,6 +57,7 @@ export function useDashboardData(state: AppState) {
       xpWeek: xpSince(state, weekStart),
       recommended: recommendedLevel(readiness, days),
       sessions: [...state.sessions].sort((a, b) => b.ts - a.ts),
+      mastery: masteryModel(state),
     };
   }, [state]);
 }
