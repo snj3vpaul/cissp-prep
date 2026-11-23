@@ -1,4 +1,4 @@
-import { BarChart3, BookOpen, Brain, FileText, Flower2, Layers, LayoutDashboard, Lightbulb, ListChecks, Settings, Timer, type LucideIcon } from "lucide-react";
+import { BarChart3, BookOpen, Brain, Egg, FileText, Flower2, Layers, LayoutDashboard, Lightbulb, ListChecks, Settings, Timer, type LucideIcon } from "lucide-react";
 
 export interface NavItem {
   href: string;
@@ -15,6 +15,7 @@ export const NAV: NavItem[] = [
   { href: "/flashcards", label: "Memory gym", icon: Layers },
   { href: "/mnemonics", label: "Mnemonics", icon: Lightbulb },
   { href: "/progress", label: "Progress", icon: BarChart3 },
+  { href: "/collection", label: "Cipher cores", icon: Egg },
   { href: "/outline", label: "Exam outline", icon: FileText },
   { href: "/resources", label: "Resources", icon: BookOpen },
 ];

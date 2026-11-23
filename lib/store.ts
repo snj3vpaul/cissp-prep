@@ -121,7 +121,30 @@ export const actions = {
   reviewCard(id: string, grade: Grade) {
     set((s) => {
       const prev: CardState = s.cards[id] ?? newCardState();
-      return { ...s, xp: s.xp + 3, cards: { ...s.cards, [id]: review(prev, grade) }, studyDays: bumpDay(s) };
+      const d = todayISO();
+      const day = s.memoryDays?.[d] ?? { n: 0, recalled: 0 };
+      return {
+        ...s,
+        xp: s.xp + 3,
+        cards: { ...s.cards, [id]: review(prev, grade) },
+        studyDays: bumpDay(s),
+        memoryDays: { ...s.memoryDays, [d]: { n: day.n + 1, recalled: day.recalled + (grade === "again" ? 0 : 1) } },
+      };
+    });
+  },
+  grantCores(grants: NonNullable<AppState["cores"]>["grants"], processed: string[]) {
+    if (!grants.length && !processed.length) return;
+    set((s) => {
+      const prev = s.cores ?? { grants: [], processed: [] };
+      return { ...s, xp: s.xp + grants.length * 40, cores: { ...prev, grants: [...prev.grants, ...grants], processed: [...prev.processed, ...processed] } };
+    });
+  },
+  /** Mark reveals as watched: n more, or all of them. */
+  seeCores(n?: number) {
+    set((s) => {
+      if (!s.cores) return s;
+      const seen = n === undefined ? s.cores.grants.length : Math.min(s.cores.grants.length, (s.cores.seen ?? 0) + n);
+      return { ...s, cores: { ...s.cores, seen } };
     });
   },
   addCustomCards(cards: Flashcard[]) {

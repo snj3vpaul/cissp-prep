@@ -8,6 +8,8 @@ import type { DomainId } from "@/lib/domains";
 import { DOMAINS } from "@/lib/domains";
 import { EffortSlider } from "@/components/knowledge/effort-slider";
 import { SessionHistory } from "@/components/dashboard/session-history";
+import { CoreStage } from "@/components/collection/core-stage";
+import { TOTAL_UNLOCKS } from "@/lib/collection";
 import type { DashboardData } from "@/components/dashboard/data";
 
 /** Line art for the dark "exam card", echoing a minimal payment card. */
@@ -63,6 +65,9 @@ function DomainMap({ weakest }: { weakest: DomainId }) {
 export function MobileWallet({ state, d }: { state: AppState; d: DashboardData }) {
   const [focus, setFocus] = useState<DomainId>(d.weakest.id);
   const dom = DOMAINS[focus - 1];
+  const grants = state.cores?.grants ?? [];
+  const cores = grants.length;
+  const latest = [...grants].sort((a, b) => b.ts - a.ts)[0];
   const examLine = d.days !== null && d.days >= 0 ? `D-${d.days}` : "No exam date";
 
   return (
@@ -112,6 +117,20 @@ export function MobileWallet({ state, d }: { state: AppState; d: DashboardData }
             </Link>
           </div>
         </div>
+        <Link href="/collection" className="relative aspect-[1.62] w-[86%] shrink-0 snap-center overflow-hidden rounded-2xl bg-[#111114] text-white shadow-lg">
+          <span className="absolute -right-6 -top-4 h-40 w-40 opacity-90">
+            <CoreStage creature={latest?.creature ?? "aegiscale"} colorway={latest?.colorway ?? 0} locked={!latest} />
+          </span>
+          <span className="absolute left-3 top-3">
+            <Pill>Cipher cores</Pill>
+          </span>
+          <span className="absolute inset-x-3 bottom-3">
+            <span className="block font-display text-3xl font-semibold leading-none">
+              {cores} <span className="text-base text-white/60">/ {TOTAL_UNLOCKS}</span>
+            </span>
+            <span className="mt-1 block text-[13px] text-white/70">Score 70%+ on anything to open the next one</span>
+          </span>
+        </Link>
       </div>
 
       {/* Focus selector, attached under the card like an account row */}

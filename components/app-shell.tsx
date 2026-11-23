@@ -12,6 +12,7 @@ import { useAppState, useHydrated } from "@/lib/store";
 import { dueCardCount } from "@/lib/derived";
 import { layoutStyle, useLayoutPrefs } from "@/lib/layout-prefs";
 import { cn } from "@/lib/utils";
+import { UnlockWatcher } from "@/components/collection/unlock-watcher";
 
 function Sidebar({ name }: { name?: string }) {
   const pathname = usePathname();
@@ -161,6 +162,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <TabBar due={due} />
+      <UnlockWatcher />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarClock, SlidersHorizontal } from "lucide-react";
+import { CalendarClock, Egg, SlidersHorizontal } from "lucide-react";
+import { TOTAL_UNLOCKS } from "@/lib/collection";
 import type { AppState } from "@/lib/types";
 import { actions } from "@/lib/store";
 import { todayISO } from "@/lib/sm2";
@@ -133,6 +134,9 @@ export function DesktopDashboard({ state, d }: { state: AppState; d: DashboardDa
                 <SlidersHorizontal className="h-4 w-4" /> Layout
               </button>
             )}
+            <Link href="/collection" className="flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-medium hover:bg-muted" aria-label={`Cipher cores: ${state.cores?.grants.length ?? 0} of ${TOTAL_UNLOCKS}`}>
+              <Egg className="h-4 w-4" aria-hidden /> {state.cores?.grants.length ?? 0}/{TOTAL_UNLOCKS}
+            </Link>
             <Link href="/exam" className="flex h-10 items-center rounded-full bg-muted px-5 text-sm font-medium hover:bg-muted-foreground/15">
               Exam sim
             </Link>

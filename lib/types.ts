@@ -90,5 +90,9 @@ export interface AppState {
   customCards: Flashcard[];
   studyDays: Record<string, number>; // YYYY-MM-DD -> items studied
   badges: Record<string, number>; // badge id -> unlocked ts
+  /** Flashcard recall per day (YYYY-MM-DD): reviews and how many were recalled (not "again"). */
+  memoryDays?: Record<string, { n: number; recalled: number }>;
+  /** Cipher-core collectibles: permanent grants and the qualifying events already processed. */
+  cores?: { grants: { creature: string; colorway: 0 | 1; ts: number; source: string; score: number }[]; processed: string[]; seen?: number };
   settings: Settings;
 }
