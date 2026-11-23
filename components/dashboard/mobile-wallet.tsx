@@ -8,7 +8,7 @@ import type { DomainId } from "@/lib/domains";
 import { DOMAINS } from "@/lib/domains";
 import { EffortSlider } from "@/components/knowledge/effort-slider";
 import { SessionHistory } from "@/components/dashboard/session-history";
-import { CoreStage } from "@/components/collection/core-stage";
+import { CoreThumb } from "@/components/collection/core3d";
 import { TOTAL_UNLOCKS } from "@/lib/collection";
 import type { DashboardData } from "@/components/dashboard/data";
 
@@ -119,7 +119,7 @@ export function MobileWallet({ state, d }: { state: AppState; d: DashboardData }
         </div>
         <Link href="/collection" className="relative aspect-[1.62] w-[86%] shrink-0 snap-center overflow-hidden rounded-2xl bg-[#111114] text-white shadow-lg">
           <span className="absolute -right-6 -top-4 h-40 w-40 opacity-90">
-            <CoreStage creature={latest?.creature ?? "aegiscale"} colorway={latest?.colorway ?? 0} locked={!latest} />
+            <CoreThumb creature={latest?.creature ?? "aegiscale"} colorway={latest?.colorway ?? 0} locked={!latest} />
           </span>
           <span className="absolute left-3 top-3">
             <Pill>Cipher cores</Pill>

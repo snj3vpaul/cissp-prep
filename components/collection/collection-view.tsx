@@ -5,7 +5,7 @@ import { RotateCcw, X } from "lucide-react";
 import { useAppState, useHydrated } from "@/lib/store";
 import { CREATURES, TOTAL_UNLOCKS, hintFor, type Creature } from "@/lib/collection";
 import { getDomain } from "@/lib/domains";
-import { CoreStage } from "@/components/collection/core-stage";
+import { Core3D, CoreThumb } from "@/components/collection/core3d";
 import { Skeleton } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ function Viewer({ c, grants, onClose }: { c: Creature; grants: Grants; onClose: 
           </div>
         </div>
         <div className="mx-auto aspect-square w-72">
-          <CoreStage key={run} creature={c.id} mode="showcase" altUnlocked={alt} />
+          <Core3D key={run} creature={c.id} mode="showcase" altUnlocked={alt} />
         </div>
         <h2 className="text-center text-2xl font-semibold">{c.name}</h2>
         <p className="mt-2 text-center text-sm text-white/65">{c.blurb}</p>
@@ -103,7 +103,7 @@ export function CollectionView() {
                 className={cn("group flex w-full flex-col items-center rounded-2xl border p-3 text-center transition-colors", base ? "border-border bg-card hover:bg-muted/60" : "cursor-default border-dashed border-border bg-muted/30", c.domain === null && base && "bg-[#141416] text-white hover:bg-[#1c1c20]")}
               >
                 <span className="aspect-square w-full max-w-[150px] transition-transform group-hover:-translate-y-1">
-                  <CoreStage creature={c.id} colorway={alt ? 1 : 0} locked={!base} />
+                  <CoreThumb creature={c.id} colorway={alt ? 1 : 0} locked={!base} alt={base ? c.name : "Sealed core"} />
                 </span>
                 <span className="mt-1 text-sm font-semibold">{base ? c.name : "???"}</span>
                 <span className="text-[11px] text-muted-foreground">{c.domain ? `D${c.domain} ${getDomain(c.domain).short}` : "Legendary"}</span>
