@@ -12,7 +12,7 @@ export function shuffle<T>(arr: T[], rand = Math.random): T[] {
 }
 
 /** Priority: never seen > previously missed > seen long ago. Adds randomness so sets vary. */
-function prioritize(pool: Question[], attempts: Attempt[]) {
+export function prioritize(pool: Question[], attempts: Attempt[]) {
   const last = new Map<string, Attempt>();
   for (const a of attempts) last.set(a.qid, a);
   return shuffle(pool)

@@ -44,12 +44,17 @@ const config: Config = {
           "100%": { transform: "translateY(100%)" },
         },
         "marquee": { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
+        galaxy: {
+          "0%,100%": { filter: "hue-rotate(0deg)", transform: "translate(-50%,-50%) scale(1)" },
+          "50%": { filter: "hue-rotate(150deg)", transform: "translate(-50%,-50%) scale(1.14)" },
+        },
       },
       animation: {
         "mesh-drift": "mesh-drift 18s ease-in-out infinite",
         "mesh-drift-slow": "mesh-drift 26s ease-in-out infinite reverse",
         scan: "scan 6s linear infinite",
         marquee: "marquee 40s linear infinite",
+        galaxy: "galaxy 2.4s ease-in-out infinite",
       },
     },
   },

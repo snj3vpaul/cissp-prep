@@ -56,7 +56,7 @@ export interface Attempt {
   mode: QuizMode;
 }
 
-export type QuizMode = "quick" | "domain" | "timed" | "exam" | "missed";
+export type QuizMode = "quick" | "domain" | "timed" | "exam" | "missed" | "check";
 
 export interface SessionSummary {
   id: string;
@@ -68,6 +68,7 @@ export interface SessionSummary {
   ts: number;
   scaled?: number; // exam simulation scaled score 0..1000
   passed?: boolean;
+  level?: number; // knowledge-check effort level (0 Low … 4 Galaxy)
 }
 
 export interface Settings {

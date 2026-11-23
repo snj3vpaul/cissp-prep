@@ -106,7 +106,7 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, onRe
                 </Button>
               )}
               <Button asChild variant="ghost">
-                <Link href={mode === "exam" ? "/dashboard" : "/quiz"}>{mode === "exam" ? "Dashboard" : "Quiz modes"}</Link>
+                <Link href={mode === "exam" ? "/" : "/quiz"}>{mode === "exam" ? "Dashboard" : "Quiz modes"}</Link>
               </Button>
             </div>
           </div>

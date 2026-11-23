@@ -21,7 +21,7 @@ A free, local-first CISSP exam-prep web app. It has original practice questions 
    - Framework preset: **Next.js**
    - Build command: `next build` (the default)
    - Environment variables: **none required**
-3. **Click Deploy.** When the deploy finishes, you can optionally set `NEXT_PUBLIC_SITE_URL` to your production URL. Canonical links, the sitemap and Open Graph tags then use your domain.
+3. **Click Deploy.**
 
 ## CISSP Pocket Trainer (`/pocket`)
 
@@ -69,7 +69,7 @@ Requires **Node 20.9 or newer** (Next.js 16 requirement).
 | **Settings** (`/settings`) | Exam date, display name, theme, sound, haptics, daily goal, export/import of all progress, and reset. |
 
 Accessibility: designed toward WCAG 2.1 AA. Everything works from the keyboard, focus rings are visible, there's a skip link, the dialogs use ARIA, chart data has text alternatives, and animations respect `prefers-reduced-motion`.
-SEO: per-page metadata, dynamic Open Graph images (one per domain), `sitemap.xml`, `robots.txt` and semantic HTML.
+Personal use only: every page is `noindex`, and `robots.txt` disallows all crawlers. `/` is the dashboard; `/dashboard` redirects there.
 
 ---
 
@@ -140,7 +140,7 @@ The `Question` and `Flashcard` interfaces live in `lib/types.ts` and match the o
 ```
 app/                    routes (page.tsx = server component + metadata)
 components/
-  landing/ dashboard/ quiz/ exam/ flashcards/ mnemonics/ progress/ settings/
+  dashboard/ knowledge/ quiz/ exam/ flashcards/ mnemonics/ progress/ settings/
   ui/                   button, card, dialog (shadcn-style primitives)
 lib/
   store.ts              localStorage store (useSyncExternalStore)

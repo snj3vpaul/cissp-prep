@@ -17,7 +17,7 @@ const KIND_LABEL: Record<RefKind, string> = {
 };
 
 export const metadata: Metadata = {
-  title: "Free CISSP study resources",
+  title: "Study resources",
   description: "Curated, legitimate free CISSP study aids: ISC2 flash cards and exam outline, ThorTeaches QOTD, Destination Certification mindmaps, Pocket Prep, LearnZapp and r/cissp.",
 };
 
@@ -43,7 +43,7 @@ export default function ResourcesPage() {
     <div className="container pb-20">
       <PageHeader
         eyebrow="Resources"
-        title="Free study aids worth your time"
+        title="Study aids worth your time"
         sub="Hand-picked, legitimate resources. We’re not affiliated with any of them — free tiers can change, so check each site for current terms."
       />
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

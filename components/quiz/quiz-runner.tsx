@@ -25,6 +25,8 @@ interface Props {
   exam?: boolean;
   examItems?: number;
   timeLimitSec?: number;
+  /** Knowledge-check effort level, recorded with the session. */
+  level?: number;
   onRestart?: () => void;
 }
 
@@ -35,7 +37,7 @@ const fmt = (s: number) => {
   return `${h ? `${h}:` : ""}${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 };
 
-export function QuizRunner({ mode, title, domain, questions, exam = false, examItems = 125, timeLimitSec, onRestart }: Props) {
+export function QuizRunner({ mode, title, domain, questions, exam = false, examItems = 125, timeLimitSec, level, onRestart }: Props) {
   const { settings } = useAppState();
   const reduce = useReducedMotion();
   const plan = useMemo(() => (exam ? planExam(examItems) : null), [exam, examItems]);
@@ -87,6 +89,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
         ts: now,
         scaled,
         passed: exam ? (scaled ?? 0) >= 700 && res.length >= 100 : undefined,
+        level,
       });
     }
   }
@@ -202,7 +205,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
   return (
     <div className="mx-auto max-w-3xl pb-20">
       {/* top bar */}
-      <div className="sticky top-16 z-20 -mx-5 bg-background/80 px-5 pb-3 pt-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:px-0">
+      <div className="sticky top-14 z-20 lg:top-0 -mx-5 bg-background/80 px-5 pb-3 pt-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:px-0">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
           <span className="font-mono text-muted-foreground">
             {title} · {exam ? "Item" : "Question"} {idx + 1} of {total}

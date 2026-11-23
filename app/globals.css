@@ -4,23 +4,23 @@
 
 @layer base {
   :root {
-    /* Light mode */
-    --background: 220 33% 98%;
-    --foreground: 226 45% 10%;
+    /* Light mode — neutral greys, black primary (quiet, wireframe-like) */
+    --background: 240 6% 97.5%;
+    --foreground: 240 10% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 226 45% 10%;
-    --primary: 258 84% 58%;
+    --card-foreground: 240 10% 8%;
+    --primary: 240 10% 8%;
     --primary-foreground: 0 0% 100%;
     --secondary: 189 85% 38%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 220 25% 93%;
-    --muted-foreground: 224 15% 38%;
-    --accent: 258 90% 96%;
-    --accent-foreground: 258 70% 40%;
+    --muted: 240 6% 93.5%;
+    --muted-foreground: 240 4% 40%;
+    --accent: 240 6% 93%;
+    --accent-foreground: 240 10% 8%;
     --destructive: 0 75% 52%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 22% 86%;
-    --input: 222 22% 86%;
+    --border: 240 6% 89%;
+    --input: 240 6% 86%;
     --ring: 258 84% 58%;
     --radius: 1rem;
     --glass: 0 0% 100% / 0.7;
@@ -74,34 +74,42 @@
 }
 
 @layer components {
+  /* Flat, quiet surfaces — this is a personal tool, not a landing page. */
   .glass {
-    background: hsl(var(--glass));
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    @apply border border-border/70;
+    background: hsl(var(--card));
+    @apply border border-border/80;
   }
   .glow-border {
     position: relative;
-    isolation: isolate;
-  }
-  .glow-border::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, hsl(var(--glow-violet) / 0.7), transparent 40%, transparent 60%, hsl(var(--glow-cyan) / 0.7));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: -1;
   }
   .text-gradient {
-    background: linear-gradient(100deg, hsl(var(--glow-violet)) 0%, hsl(var(--glow-cyan)) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: hsl(var(--foreground));
+  }
+
+  /* ---- Spacing zones (dashboard layout tuner) ---- */
+  .z-anim {
+    transition: padding 0.35s ease, gap 0.35s ease, width 0.35s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  }
+  [data-zone="sidebar"] .z-sidebar {
+    background-color: rgb(229 72 122 / 0.12);
+    box-shadow: inset -2px 0 0 rgb(229 72 122 / 0.6);
+  }
+  [data-zone="page"] .z-page {
+    box-shadow: inset 0 0 0 var(--pp) rgb(59 130 246 / 0.16);
+  }
+  [data-zone="section"] .z-stack {
+    background-color: rgb(139 92 246 / 0.2);
+    border-radius: 12px;
+  }
+  [data-zone="section"] .z-stack > * {
+    background-color: hsl(var(--background));
+  }
+  [data-zone="gap"] .z-grid {
+    background-color: rgb(22 163 74 / 0.22);
+    border-radius: 12px;
+  }
+  [data-zone="card"] .z-card {
+    box-shadow: inset 0 0 0 var(--cp) rgb(245 158 11 / 0.28);
   }
   .grid-bg {
     background-image:

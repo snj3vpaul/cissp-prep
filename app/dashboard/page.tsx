@@ -1,15 +1,6 @@
-import type { Metadata } from "next";
-import { Dashboard } from "@/components/dashboard/dashboard";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Your CISSP readiness score, domain radar, study streak, exam countdown and next best study session.",
-};
-
-export default function DashboardPage() {
-  return (
-    <div className="container pt-8 sm:pt-12">
-      <Dashboard />
-    </div>
-  );
+/** The dashboard now lives at "/". Keep old bookmarks working. */
+export default function DashboardRedirect() {
+  redirect("/");
 }

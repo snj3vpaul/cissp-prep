@@ -1,10 +1,6 @@
 import type { MetadataRoute } from "next";
-import { SITE } from "@/lib/utils";
 
+/** Personal study tool: keep it out of search engines. */
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/settings"] }],
-    sitemap: `${SITE.url}/sitemap.xml`,
-    host: SITE.url,
-  };
+  return { rules: [{ userAgent: "*", disallow: "/" }] };
 }

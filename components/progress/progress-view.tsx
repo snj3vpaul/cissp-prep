@@ -96,7 +96,7 @@ export function ProgressView() {
               </div>
             ))}
           </dl>
-          <p className="mt-3 text-xs text-muted-foreground">Leaderboard-ready: stats stay local; copy them to share with a study group.</p>
+          <p className="mt-3 text-xs text-muted-foreground">Stats stay in this browser. Copy them as JSON for a backup.</p>
         </Card>
       </div>
 

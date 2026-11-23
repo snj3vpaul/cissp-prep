@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, History, Timer, Zap, Swords } from "lucide-react";
+import { ArrowRight, Brain, History, Timer, Zap, Swords } from "lucide-react";
 import { DOMAINS } from "@/lib/domains";
 import { QUESTIONS_BY_DOMAIN, QUESTIONS } from "@/data/questions";
 import { PageHeader } from "@/components/page-header";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 const MODES = [
+  { href: "/quiz/check", icon: Brain, title: "Knowledge check", body: "Slide the effort from Low (5 quick facts) to Galaxy (60 hard items, exam pace).", meta: "5–60 items · adaptive effort" },
   { href: "/quiz/quick", icon: Zap, title: "Quick 10", body: "Ten questions weighted across all domains. Perfect for a coffee break.", meta: "~10 min · untimed" },
   { href: "/quiz/timed", icon: Timer, title: "Timed 25", body: "25 questions, 30-minute clock — trains exam-day pace (~72s each).", meta: "30 min · timed" },
   { href: "/quiz/missed", icon: History, title: "Missed review", body: "Re-attempt questions you most recently got wrong until they stick.", meta: "up to 20 · untimed" },
@@ -23,7 +24,7 @@ export default function QuizPage() {
     <div className="container pb-20">
       <PageHeader eyebrow="Quiz engine" title="Choose your mission" sub={`${QUESTIONS.length} original questions with rationales for every option. Keyboard: 1–4 to answer, Enter to submit.`} />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {MODES.map((m) => (
           <Link key={m.href} href={m.href} className="glass group relative flex flex-col rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/50">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/25 to-cyan-400/20">
