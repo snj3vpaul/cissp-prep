@@ -113,6 +113,87 @@ input[type=date]{background:var(--panel2);color:var(--txt);border:1px solid var(
 @keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
 .pop{animation:pop .35s cubic-bezier(.2,1.5,.4,1)}
 .sync{font-size:11px;color:var(--mut)}
+/* ---- sticker pack ---- */
+:root{--die:#f6f1e7}
+.pack{position:relative;display:block;width:100%;height:120px;margin-top:26px;text-align:left;filter:drop-shadow(0 12px 16px #ff5f1f44);animation:packIdle 3.4s ease-in-out infinite;transition:transform .12s}
+.pack:active{transform:scale(.96)}
+@keyframes packIdle{0%,100%{rotate:-1deg}50%{rotate:1deg}}
+.peek{position:absolute;top:-18px;width:56px;height:70px;border-radius:10px;background:var(--panel);border:3px solid var(--die);border-top:14px solid var(--c);animation:peek 2.6s ease-in-out infinite}
+.peek.p1{left:14%;rotate:-11deg}.peek.p2{left:38%;top:-24px;rotate:3deg;animation-delay:.35s}.peek.p3{left:60%;rotate:13deg;animation-delay:.7s}
+@keyframes peek{50%{translate:0 -7px}}
+.foil{position:absolute;inset:0;background:linear-gradient(120deg,#ff9a2e,#ff5f1f 52%,#ff8a1f);padding:18px 92px 18px 18px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.shine{position:absolute;top:0;bottom:0;left:-50%;width:40%;background:linear-gradient(100deg,transparent,#fff7 50%,transparent);animation:shine 3.2s infinite}
+@keyframes shine{0%{left:-50%}60%,100%{left:130%}}
+.pk-top{font-size:11px;font-weight:700;color:#3a1500;letter-spacing:.05em}
+.pk-name{font-family:"Space Grotesk";font-size:28px;font-weight:700;color:#1a0a00;line-height:1;margin:3px 0}
+.pk-sub{font-size:12px;color:#3a1500;font-weight:600}
+.eyes{position:absolute;right:20px;top:50%;margin-top:-27px;width:54px;height:54px;border-radius:50%;background:#14110f;display:flex;gap:8px;align-items:center;justify-content:center;border:3px solid var(--die);rotate:8deg}
+.eyes i{width:7px;height:18px;border-radius:4px;background:#fff;animation:blink 4s infinite}
+@keyframes blink{0%,92%,100%{scale:1 1}95%{scale:1 .1}}
+.grid2 .tile:nth-child(odd){rotate:-.8deg}.grid2 .tile:nth-child(even){rotate:.8deg}
+/* burst overlay */
+.burstbg{position:fixed;inset:0;z-index:45;background:#0b0f17ee;transition:opacity .3s}
+.burstbg.fade{opacity:0}
+.bpack{position:absolute;left:50%;top:58%;width:210px;height:130px;margin:-65px 0 0 -105px}
+.btop,.bbody{position:absolute;left:0;right:0;background:linear-gradient(120deg,#ff9a2e,#ff5f1f 52%,#ff8a1f)}
+.btop{top:0;height:30px;animation:tear .5s .3s cubic-bezier(.3,.6,.4,1) forwards}
+.bbody{top:30px;bottom:0;display:grid;place-items:center;animation:shake .3s,drop .5s .6s ease-in forwards}
+@keyframes tear{to{translate:90px -170px;rotate:38deg;opacity:0}}
+@keyframes shake{0%,100%{rotate:0deg}25%{rotate:-4deg}75%{rotate:4deg}}
+@keyframes drop{to{translate:0 180px;opacity:0}}
+.bcard{position:absolute;left:50%;top:58%;width:74px;height:96px;margin:-48px 0 0 -37px;border-radius:12px;background:var(--panel);border:3px solid var(--die);border-top:18px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Space Grotesk";font-size:18px;opacity:0;animation:fly .6s cubic-bezier(.2,1.3,.4,1) forwards}
+@keyframes fly{0%{opacity:1;transform:scale(.3)}100%{opacity:1;transform:translate(var(--tx),var(--ty)) rotate(var(--r)) scale(1)}}
+/* question deck */
+.dots{gap:8px;justify-content:center}
+.dots i.slot{flex:none;width:26px;height:26px;border-radius:50%;background:transparent;border:2px dashed var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700}
+.dots i.slot.cur{border:2px solid var(--acc)}
+.dots i.slot.ok{background:var(--c);border:2.5px solid var(--die);color:#0b0f17}
+.dots i.slot.bad{background:#3a3f4b;border:2.5px solid var(--die);color:#c9ced8}
+.popin{animation:pop .5s cubic-bezier(.2,1.8,.4,1)}
+.deck{position:relative;margin:22px 4px 18px}
+.deck .ghost{position:absolute;inset:0;border-radius:20px;background:var(--panel2);border:3px solid var(--die);opacity:.3}
+.deck .g1{transform:rotate(2.5deg) translateY(7px)}.deck .g2{transform:rotate(-3deg) translateY(13px);opacity:.15}
+.qcard{position:relative;z-index:1;background:var(--panel);border-radius:20px;padding:22px 16px 4px;border:3px solid var(--die);box-shadow:0 14px 30px -14px #000;transform:rotate(var(--rot))}
+.qcard::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:var(--c);border-radius:16px 16px 0 0}
+.qtab{position:absolute;top:-15px;right:14px;background:#14110f;color:#fff;border:2.5px solid var(--die);border-radius:99px;padding:2px 10px;font:700 12px "Space Grotesk";rotate:4deg}
+.qcard.in{animation:cardIn .6s cubic-bezier(.2,1.35,.4,1) both}
+@keyframes cardIn{0%{transform:translateY(120px) scale(.4) rotate(-14deg);opacity:0}100%{transform:rotate(var(--rot));opacity:1}}
+.qcard.out{animation:cardOut .32s cubic-bezier(.5,0,.9,.4) forwards}
+@keyframes cardOut{to{transform:translate(160px,-120px) rotate(24deg) scale(.4);opacity:0}}
+.opt.in{animation:optIn .42s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--d,0s) + .18s + var(--k)*.06s)}
+@keyframes optIn{0%{opacity:0;transform:translateY(18px) scale(.94)}100%{opacity:1;transform:none}}
+.star{flex:none;width:60px;height:60px;display:grid;place-items:center;text-align:center;line-height:1;background:linear-gradient(135deg,#ffb020,#ff5f8a);color:#1a0a00;font:700 14px "Space Grotesk";rotate:-8deg;animation:pop .5s cubic-bezier(.2,1.8,.4,1)}
+.star.crit{background:linear-gradient(135deg,#ffe14d,#ff7a1a);font-size:12px}
+/* sticker book */
+.book{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 6px;padding:18px 8px 14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.bdg{display:flex;flex-direction:column;align-items:center;gap:7px;transition:transform .15s}
+.bdg:active{transform:scale(.9)}
+.disc{position:relative;width:66px;height:66px;border-radius:50%;background:var(--c);border:3px solid var(--die);box-shadow:0 6px 14px -6px #000;display:flex;flex-direction:column;align-items:center;justify-content:center;rotate:var(--rot);color:#0b0f17;transition:rotate .25s}
+.bdg:hover .disc{rotate:calc(var(--rot)*-1)}
+.disc svg{position:absolute;inset:0;width:100%;height:100%}
+.disc .rb{fill:none;stroke:#0000001c;stroke-width:3}.disc .rf{fill:none;stroke:#0b0f17b0;stroke-width:3;stroke-linecap:round}
+.bdg.empty .disc{background:var(--panel2);color:var(--mut);border:2px dashed var(--line);box-shadow:none}
+.bn{font:700 20px/1 "Space Grotesk"}
+.bl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.cnt{position:absolute;top:-8px;right:-10px;background:#14110f;color:#fff;border:2px solid var(--die);border-radius:99px;font:700 11px "Space Grotesk";padding:1px 6px;rotate:10deg}
+.cap{font-size:11px;color:var(--mut)}
+/* results sheet */
+.sheetd{margin-top:18px;background:#e7e1d6;border-radius:22px;padding:24px 14px;display:flex;flex-wrap:wrap;gap:14px 10px;align-items:center;justify-content:center}
+.sheetd .pop{animation-fill-mode:both}
+.sd-score{background:#14110f;color:#fff;font:700 40px/1 "Space Grotesk";padding:12px 22px;border-radius:99px;border:4px solid #fff;box-shadow:0 6px 14px -6px #0008;rotate:-3deg}
+.bubble{position:relative;background:#fff;color:#14110f;font:600 17px "Space Grotesk";padding:10px 14px;border-radius:12px;box-shadow:0 6px 14px -8px #0008;rotate:2deg}
+.bubble::after{content:"";position:absolute;left:18px;bottom:-9px;border:9px solid transparent;border-top-color:#fff;border-bottom:0}
+.star.big2{width:88px;height:88px;font-size:22px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.star small{font-size:11px}
+.rs{width:50px;height:50px;border-radius:50%;background:var(--c);border:3.5px solid #fff;box-shadow:0 5px 10px -5px #0008;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 18px/1 "Space Grotesk";color:#14110f}
+.rs small{font-size:9px;margin-top:2px}
+.rs.miss{background:#9aa1ad;color:#fff}
+.cat{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);text-align:left}
+.ctrack{position:relative;height:12px;margin:12px 0 8px;border-radius:99px;background:linear-gradient(90deg,#f0605d33,#ffb02033 50%,#2fc57a33)}
+.ctrack .band{position:absolute;top:0;bottom:0;border-radius:99px;background:#5b9dff66;transition:all .5s}
+.ctrack .pass{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--txt);margin-left:-1px}
+.ctrack .dot{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--blue);border:2.5px solid var(--die);transition:left .5s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -129,6 +210,37 @@ input[type=date]{background:var(--panel2);color:var(--txt);border:1px solid var(
 "use strict";
 const DOMS={1:["Security & Risk Mgmt",16],2:["Asset Security",10],3:["Architecture & Engineering",13],4:["Network Security",13],5:["Identity & Access",13],6:["Assessment & Testing",12],7:["Security Operations",13],8:["Software Dev Security",10]};
 const TIERS={1:["Recruit","🌱","Recall the concept"],2:["Analyst","🔎","Apply it"],3:["Manager","🧭","BEST / FIRST / MOST"],4:["CISO","👑","Tricky, exam-hard"]};
+const DC={1:"#ff6a2b",2:"#5b9dff",3:"#a48bff",4:"#2fb3c9",5:"#f5c13b",6:"#2fc57a",7:"#ff6b8a",8:"#d79bff"};
+const DSH={1:"Risk",2:"Assets",3:"Arch",4:"Network",5:"IAM",6:"Testing",7:"SecOps",8:"DevSec"};
+const RM=(()=>{try{return matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){return false}})();
+const STAR=(()=>{const p=[],n=14;for(let i=0;i<n*2;i++){const a=Math.PI*i/n,r=i%2?40:50;p.push((50+r*Math.cos(a)).toFixed(1)+"% "+(50+r*Math.sin(a)).toFixed(1)+"%")}return "polygon("+p.join(",")+")"})();
+const ZIG=(()=>{const n=22,t=[],b=[];for(let i=0;i<=n;i++){const x=(i/n*100).toFixed(2)+"%";t.push(x+" "+(i%2?0:7)+"px");b.unshift(x+" calc(100% - "+(i%2?0:7)+"px)")}return "polygon("+t.concat(b).join(",")+")"})();
+/* ---------- CAT engine (Rasch / 1PL IRT) ---------- */
+const BT={1:-1.8,2:-0.6,3:0.5,4:1.5}; // item difficulty in logits per tier
+const PASS=0.2,CAT_MIN=20,CAT_MAX=50;
+const GRID=[];for(let i=-40;i<=40;i++)GRID.push(i/10);
+function info(t,b){const p=1/(1+Math.exp(-(t-b)));return p*(1-p)}
+function estimate(resp,prior){const m0=prior||0;const lw=GRID.map(t=>-((t-m0)**2)/2);
+  for(const [b,ok] of resp)for(let i=0;i<GRID.length;i++){const p=1/(1+Math.exp(-(GRID[i]-b)));lw[i]+=Math.log(ok?p:1-p)}
+  const mx=Math.max(...lw),w=lw.map(x=>Math.exp(x-mx));let s=0,m=0;w.forEach((x,i)=>{s+=x;m+=x*GRID[i]});m/=s;let v=0;w.forEach((x,i)=>{v+=x*(GRID[i]-m)**2});return {m,sd:Math.sqrt(v/s)}}
+function ability(){const r=[];for(const id in S.seen){const q=byId[id];if(!q)continue;const s=S.seen[id];for(let i=0;i<(s.c||0);i++)r.push([BT[q.t],1]);for(let i=0;i<(s.w||0);i++)r.push([BT[q.t],0])}return estimate(r,S.prior||0)}
+function scaled(t){return Math.max(0,Math.min(1000,Math.round(700+(t-PASS)*180)))}
+function catPick(theta,used,mode,dc){
+  const ex=new Set(used),ds=Object.keys(DOMS).map(Number);let cnt,tot;
+  if(mode==="cat"){cnt=d=>dc[d]||0;tot=Object.values(dc).reduce((a,b)=>a+b,0)}
+  else{cnt=d=>(S.dom[d]?S.dom[d].a:0);tot=Object.values(S.dom).reduce((a,x)=>a+x.a,0)}
+  const order=ds.map(d=>[d,DOMS[d][1]/100*(tot+1)-cnt(d)+Math.random()*.3]).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+  const tiers=[1,2,3,4].sort((a,b)=>info(theta,BT[b])-info(theta,BT[a]));
+  for(const t of tiers.slice(0,2))for(const d of order.slice(0,3)){const it=pickFrom(Q.filter(q=>q.d===d&&q.t===t),1,ex);if(it.length)return it[0]}
+  for(const t of tiers){const it=pickFrom(Q.filter(q=>q.t===t),1,ex);if(it.length)return it[0]}
+  return null;
+}
+function meter(e,prev){const X=t=>Math.max(0,Math.min(100,(t+3)/6*100)),lo=e.m-1.96*e.sd,hi=e.m+1.96*e.sd;
+  const st=lo>PASS?["Confidently above the pass line","var(--ok)"]:hi<PASS?["Confidently below the pass line","var(--bad)"]:["Still too close to call","var(--acc)"];
+  const d=prev?scaled(e.m)-scaled(prev.m):0;
+  return `<div class="cat"><div class="row between xs"><span class="mut">CAT ability estimate</span><span><b style="font-family:'Space Grotesk';font-size:15px">${scaled(e.m)}</b><span class="mut"> ± ${Math.round(1.96*e.sd*180)}</span>${d?` <b style="color:${d>0?"var(--ok)":"var(--bad)"}">${d>0?"▲":"▼"}${Math.abs(d)}</b>`:""}</span></div>
+  <div class="ctrack"><i class="band" style="left:${X(lo)}%;width:${Math.max(2,X(hi)-X(lo))}%"></i><i class="pass" style="left:${X(PASS)}%"></i><i class="dot" style="left:${X(e.m)}%"></i></div>
+  <div class="xs" style="color:${st[1]}">${st[0]} <span class="mut">· line = 700 pass mark · band = 95% confidence</span></div></div>`}
 const RANKS=[[0,"Recruit"],[300,"Analyst"],[800,"Engineer"],[1600,"Architect"],[3000,"Manager"],[5000,"Director"],[8000,"CISO"],[12000,"Exam-Ready"]];
 const TIPS=["Think like a manager: people first, then process, then technology.","On ‘FIRST’ questions, pick the step that understands the problem before the one that fixes it.","Senior management owns risk. Security advises, and doesn’t decide.","If an answer is purely technical and another addresses policy or governance, look twice at the governance one.","Life safety beats everything, including evidence, uptime and money.","‘BEST’ means the most complete answer, not the one that’s merely true.","A control should never cost more than what it protects.","Watch for absolutes like ‘always’ and ‘immediately’. They’re usually traps.","Contain before you eradicate, and collect evidence before you wipe.","Owners decide, custodians implement, users comply."];
 const Q=QB.map((r,i)=>({id:"q"+i,d:r[0],t:r[1],s:r[2],o:r[3],w:r[4]}));
@@ -172,6 +284,8 @@ function pickFrom(pool,n,exclude){
   return out;
 }
 function buildSet(mode,arg){
+  if(mode==="auto"||mode==="cat"){const f=catPick(BT[1],[],mode,{});return f?[f]:[]}
+  if(mode==="one"){const f=catPick(ability().m,[],"auto",{});return f?[f]:[]}
   const n=mode==="one"?1:(mode==="boss"?1:5);
   if(mode==="boss"){const t4=Q.filter(q=>q.t===4);return [t4[today()%t4.length]]}
   if(mode==="review"){return dueIds().slice(0,10).map(getQ)}
@@ -193,9 +307,21 @@ function start(mode,arg){
   const set=buildSet(mode,arg);
   if(!set.length){toast(mode==="review"?"🎉 Nothing to review — you’re clean!":"No questions here yet");return}
   R={mode,arg,set,i:0,res:[],xp:0,combo:0,maxCombo:0,stage:"q",sel:null,order:null,startTier:S.tier,goalHitBefore:todayCount()>=S.goal};
-  prepQ();render();window.scrollTo(0,0);
+  if(mode==="auto"||mode==="cat"){R.cat=true;R.n=mode==="auto"?5:0;R.resp=[];R.dc={};R.est=mode==="cat"?estimate([],0):ability();R.prevEst=null}
+  const cards=R.n?Array.from({length:R.n},(_,k)=>set[k]||null):set;
+  const burst=cards.length>1&&!RM;
+  prepQ();R.delayIn=burst;render();window.scrollTo(0,0);
+  if(burst)packBurst(cards);
 }
-function prepQ(){const q=R.set[R.i];R.order=shuffle([0,1,2,3]);R.sel=null;R.stage="q";R.q=q}
+function prepQ(){const q=R.set[R.i];R.order=shuffle([0,1,2,3]);R.sel=null;R.stage="q";R.q=q;R.anim=true;R.rot=+(Math.random()*3-1.5).toFixed(1)}
+function packBurst(set){
+  const o=document.createElement("div");o.className="burstbg";o.setAttribute("aria-hidden","true");
+  const n=set.length;
+  o.innerHTML=`<div class="bpack"><div class="btop" style="clip-path:${ZIG}"></div><div class="bbody" style="clip-path:${ZIG}"><span class="pk-name">SPRINT PACK</span></div></div>`+
+    set.map((q,k)=>{const ang=(k-(n-1)/2)*22;return `<div class="bcard" style="--c:${q?DC[q.d]:"var(--acc)"};--tx:${Math.round(ang*3.2)}px;--ty:${-160-Math.round(Math.abs(ang)*1.4)}px;--r:${ang}deg;animation-delay:${(.45+k*.07).toFixed(2)}s"><b>${q?"D"+q.d:"?"}</b><span>${q?TIERS[q.t][1]:"🎯"}</span></div>`}).join("");
+  document.body.appendChild(o);buzz([10,40,10]);
+  setTimeout(()=>o.classList.add("fade"),1150);setTimeout(()=>o.remove(),1500);
+}
 function answer(conf){
   const q=R.q,ok=R.sel===0,t=today();
   // xp
@@ -207,6 +333,7 @@ function answer(conf){
   S.xp+=xp;R.xp+=xp;
   // stats
   const dm=S.dom[q.d]||(S.dom[q.d]={a:0,c:0});dm.a++;if(ok)dm.c++;
+  R.pop=R.res.length;
   S.days[t]=(S.days[t]||0)+1;S.answered++;
   // leitner
   const sv=S.seen[q.id]||{b:0,c:0,w:0};const gaps=[1,2,4,7,14,30];
@@ -215,13 +342,10 @@ function answer(conf){
   else{sv.b=0;sv.due=t;sv.w++}
   sv.last=Date.now();S.seen[q.id]=sv;
   if(q.ai&&ok&&conf!=="guess"&&sv.b>=2){/* graduate ai q from storage */}
-  // auto tier ladder
+  // CAT: re-estimate ability from the difficulty of every item answered so far
   let tierMsg="";
-  if(q.t===S.tier&&(R.mode==="auto"||R.mode==="one")){
-    S.th.push(ok?1:0);S.th=S.th.slice(-5);const c=S.th.reduce((a,b)=>a+b,0);
-    if(S.th.length>=5&&c>=4&&S.tier<4){S.tier++;S.th=[];tierMsg="up"}
-    else if(S.th.length>=4&&S.th.slice(-4).reduce((a,b)=>a+b,0)<=1&&S.tier>1){S.tier--;S.th=[];tierMsg="down"}
-  }
+  if(R.cat){R.resp.push([BT[q.t],ok]);R.dc[q.d]=(R.dc[q.d]||0)+1;R.prevEst=R.est;R.est=R.mode==="cat"?estimate(R.resp,0):ability()}
+  if(!q.ai){const g=ability().m,nt=[1,2,3,4].reduce((a,x)=>Math.abs(BT[x]-g)<Math.abs(BT[a]-g)?x:a,1);if(nt!==S.tier&&S.answered>=5&&Math.abs(BT[S.tier]-g)-Math.abs(BT[nt]-g)>.15){tierMsg=nt>S.tier?"up":"down";S.tier=nt}}
   // streak
   let streakMsg="";
   if(S.days[t]>=S.goal&&S.lastGoal!==t){
@@ -239,13 +363,21 @@ function answer(conf){
   save();
   buzz(ok?20:[30,60,30]);
   render();
-  if(tierMsg==="up")setTimeout(()=>{toast(`🚀 Promoted to <b>${TIERS[S.tier][0]}</b> tier!`,2600);confetti()},300);
+  if(tierMsg==="up")setTimeout(()=>{toast(`📈 Ability estimate rose: <b>${TIERS[S.tier][0]}</b>-level cards unlocked`,2600);confetti()},300);
   else if(tierMsg==="down")setTimeout(()=>toast(`Easing to ${TIERS[S.tier][0]} tier to rebuild momentum 💪`),300);
   if(R.goalJustHit&&!R.goalShown){R.goalShown=true;setTimeout(()=>{toast(`🔥 Daily goal hit! ${S.streak}-day streak`,2600);confetti()},tierMsg?2800:400)}
   if(streakMsg)setTimeout(()=>toast(streakMsg,2600),5600);
   const fbEl=document.getElementById("fb");if(fbEl)setTimeout(()=>fbEl.scrollIntoView({behavior:"smooth",block:"nearest"}),60);
 }
 function next(){
+  if(R.busy)return;const c=document.querySelector(".qcard");
+  if(c&&!RM){R.busy=true;c.classList.remove("in");c.classList.add("out");setTimeout(()=>{if(!R)return;R.busy=false;advance()},300)}else advance();
+}
+function advance(){
+  if(R.cat){const tot=R.res.length;let stop;
+    if(R.mode==="auto")stop=tot>=R.n;
+    else{const lo=R.est.m-1.96*R.est.sd,hi=R.est.m+1.96*R.est.sd;stop=tot>=CAT_MAX||(tot>=CAT_MIN&&(lo>PASS||hi<PASS))}
+    if(!stop){const it=catPick(R.est.m,R.set.map(x=>x.id),R.mode,R.dc);if(it)R.set.push(it)}}
   R.i++;
   if(R.i<R.set.length){prepQ();render();window.scrollTo(0,0);return}
   R.stage="done";render();window.scrollTo(0,0);
@@ -321,7 +453,15 @@ function renderHome(){
     </div>
     ${atRisk?`<div class="risk">⚠️ Your ${st}-day streak ends at midnight. Answer ${S.goal-tc} more question${S.goal-tc>1?"s":""} to keep it.</div>`:""}
     ${examLine}
-    <div style="margin-top:14px"><button class="btn primary pulse" data-act="go" data-m="auto">▶ Start 5-question sprint</button></div>
+    <button class="pack" data-act="go" data-m="auto" aria-label="Tear open a 5-question sprint pack">
+      <span class="peek p1" style="--c:${DC[1]}"></span><span class="peek p2" style="--c:${DC[5]}"></span><span class="peek p3" style="--c:${DC[3]}"></span>
+      <span class="foil" style="clip-path:${ZIG}"><span class="shine"></span>
+        <span class="pk-top">CISSP · ${TIERS[S.tier][0]} tier</span>
+        <span class="pk-name">SPRINT PACK</span>
+        <span class="pk-sub">5 adaptive cards · starts easy, then finds your level</span>
+        <span class="eyes"><i></i><i></i></span>
+      </span>
+    </button>
     <div class="row" style="margin-top:8px">
       <button class="btn ghost small" style="flex:1" data-act="go" data-m="one">⚡ Just 1 question</button>
       ${due?`<button class="btn ghost small" style="flex:1" data-act="go" data-m="review">🔁 Review ${due}</button>`:""}
@@ -334,14 +474,15 @@ function renderHome(){
     <button class="tile" data-act="go" data-m="review">${due?`<span class="badge">${due}</span>`:""}<span class="em">🔁</span><b>Fix my misses</b><span class="mut xs">${due?"Spaced review is due":"All clear for now"}</span></button>
     <button class="tile" data-act="go" data-m="domain" data-a="${weakest()}"><span class="em">🎯</span><b>Weakest domain</b><span class="mut xs">D${weakest()} ${DOMS[weakest()][0]}</span></button>
     <button class="tile ${sampleFn?"":"locked"}" data-act="ai"><span class="em">♾️</span><b>Endless mode</b><span class="mut xs">${sampleFn?"Claude writes fresh questions":capsDone?"Open in the Claude app":"Loading…"}</span></button>
+    <button class="tile" style="grid-column:1/-1;rotate:0deg" data-act="go" data-m="cat"><span class="em">🧪</span><b>CAT simulator</b><span class="mut xs">${CAT_MIN}–${CAT_MAX} adaptive cards. Stops as soon as it’s confident you’re above or below the pass line.</span></button>
   </div>
 
   <div class="sect">Choose a difficulty</div>
   <div class="tiers">
-    <button class="tierb ${"on"}" data-act="go" data-m="auto"><span class="e">🎚️</span>Auto</button>
+    <button class="tierb on" data-act="go" data-m="auto"><span class="e">🎯</span>CAT</button>
     ${[1,2,3,4].map(t=>`<button class="tierb" data-act="go" data-m="tier" data-a="${t}"><span class="e">${TIERS[t][1]}</span><span class="t${t}">${TIERS[t][0]}</span></button>`).join("")}
   </div>
-  <p class="mut xs" style="margin:8px 2px 0">Auto moves you up a tier when you get 4 of 5 right and eases you down when you’re struggling. Each sprint includes one stretch question from the tier above.</p>
+  <p class="mut xs" style="margin:8px 2px 0">CAT mode works like the real exam: every pack opens with an easy card well below the passing standard, re-estimates your ability after each answer from all the items so far, then serves the card that tells it the most about you. The fixed tiers are for focused practice.</p>
 
   <div class="sect">Your rank</div>
   <div class="card">
@@ -349,13 +490,15 @@ function renderHome(){
     <div class="bar" style="margin:10px 0 14px"><i style="width:${Math.round(pct*100)}%"></i></div>
     <div class="row between sm"><span class="mut">Exam readiness (estimate)</span><b>${rd}%</b></div>
     <div class="bar" style="margin-top:6px"><i style="width:${rd}%;background:linear-gradient(90deg,var(--blue),var(--t3))"></i></div>
+    ${Object.keys(S.seen).length?meter(ability(),null):""}
     <div class="row between xs mut" style="margin-top:10px"><span>Best streak ${S.best}</span><span>Best combo ×${S.bestCombo}</span><span>${S.answered} answered</span></div>
   </div>
 
-  <div class="sect">Domain mastery · tap to drill</div>
-  <div class="card" style="padding:8px 14px">
-    ${Object.keys(DOMS).map(d=>{const a=domAcc(d),x=S.dom[d];return `<button class="dom" data-act="go" data-m="domain" data-a="${d}"><span class="n">D${d}</span><span><div class="nm">${DOMS[d][0]} <span class="mut xs">${DOMS[d][1]}%</span></div><div class="bar"><i style="width:${a===null?0:Math.round(a*100)}%;background:${a===null?"":a>=.75?"var(--ok)":a>=.55?"var(--acc)":"var(--bad)"}"></i></div></span><span class="pc ${a===null?"mut":""}">${a===null?"—":Math.round(a*100)+"%"}</span></button>`}).join("")}
+  <div class="sect">Sticker book · tap a badge to drill</div>
+  <div class="book">
+    ${Object.keys(DOMS).map((d,k)=>{const a=domAcc(d),n=(S.dom[d]||{}).c||0,C=2*Math.PI*27,rot=[-6,4,-3,7,-5,3,6,-4][k];return `<button class="bdg ${n?"":"empty"}" data-act="go" data-m="domain" data-a="${d}" style="--c:${DC[d]};--rot:${rot}deg" aria-label="Drill domain ${d}, ${DOMS[d][0]}"><span class="disc"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" class="rb"/><circle cx="30" cy="30" r="27" class="rf" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-(a||0))).toFixed(1)}" transform="rotate(-90 30 30)"/></svg><span class="bn">0${d}</span><span class="bl">${DSH[d]}</span>${n?`<span class="cnt">×${n}</span>`:""}</span><span class="cap" style="color:${a===null?"var(--mut)":a>=.75?"var(--ok)":a>=.55?"var(--acc)":"var(--bad)"}">${a===null?"not started":Math.round(a*100)+"% right"}</span></button>`}).join("")}
   </div>
+  <p class="mut xs" style="margin:8px 2px 0">Every right answer earns a sticker. The ring around each badge shows your accuracy in that domain.</p>
   <p class="mut xs" style="text-align:center;margin-top:18px">💡 ${TIPS[t%TIPS.length]}</p>
   <p class="sync" id="sync" style="text-align:center">${syncState}</p>`;
 }
@@ -363,13 +506,13 @@ function renderHome(){
 function renderQuiz(){
   if(R.stage==="load")return `<div class="qhead"><button class="iconbtn" data-act="quit">✕</button><span class="chip">♾️ Endless</span></div><div class="card" style="text-align:center;padding:40px 16px"><div class="big pop">✍️</div><p>Claude is writing a fresh question for <b>D${weakest()}</b>…</p><p class="mut sm">${TIPS[Math.floor(Math.random()*TIPS.length)]}</p></div>`;
   const q=R.q,L="ABCD";
-  const total=R.mode==="ai"?R.set.length:R.set.length;
-  const dots=R.mode==="ai"?"":R.set.map((_,k)=>{const r=R.res[k];return `<i class="${r?(r.ok?"ok":"bad"):k===R.i?"cur":""}"></i>`}).join("");
+  const rem=R.mode==="ai"?0:R.mode==="cat"?2:Math.min(2,(R.n||R.set.length)-R.i-1);
+  const dots=R.mode==="ai"?"":R.mode==="cat"?`<span class="chip">🧪 CAT · ${R.res.length} answered · no going back</span>`:Array.from({length:R.n||R.set.length},(_,k)=>{const sq=R.set[k],r=R.res[k];return `<i class="slot ${r?(r.ok?"ok":"bad"):k===R.i?"cur":""} ${R.pop===k?"popin":""}" style="--c:${sq?DC[sq.d]:"var(--acc)"}">${r?(r.ok?"✓":"✕"):""}</i>`}).join("");
   const opts=R.order.map((oi,k)=>{
     let cls="";
     if(R.stage==="fb"){if(oi===0)cls="right";else if(oi===R.sel)cls="wrong";else cls="dim"}
     else if(R.sel===oi)cls="sel";
-    return `<button class="opt ${cls}" data-act="${R.stage==="q"?"pick":""}" data-o="${oi}"><span class="L">${L[k]}</span><span>${esc(q.o[oi])}</span></button>`}).join("");
+    return `<button class="opt ${cls}${R.anim?" in":""}" style="--k:${k};--d:${R.delayIn?1.05:0}s" data-act="${R.stage==="q"?"pick":""}" data-o="${oi}"><span class="L">${L[k]}</span><span>${esc(q.o[oi])}</span></button>`}).join("");
   let bottom="";
   if(R.stage==="q"){
     if(R.sel!==null){
@@ -382,11 +525,12 @@ function renderQuiz(){
   }else{
     const l=R.last;
     const head=l.ok?(l.conf==="guess"?"✅ Right, but it was a guess, so you’ll see it again":"✅ Correct"):(l.conf==="sure"?"❌ Blind spot: you were sure":"❌ Not quite");
-    const lastQ=R.mode==="ai"?false:R.i===R.set.length-1;
+    const lastQ=R.mode==="ai"||R.mode==="cat"?false:R.i===(R.n||R.set.length)-1;
     bottom=`<div class="fb ${l.ok?"ok":"bad"} pop" id="fb">
-      <div class="row between"><h3>${head}</h3><span class="xpfly ${l.crit?"crit":""}">${l.crit?"⚡CRIT ":""}+${l.xp}</span></div>
+      <div class="row between"><h3>${head}</h3><span class="star ${l.crit?"crit":""}" style="clip-path:${STAR}">${l.crit?"CRIT<br>":""}+${l.xp}</span></div>
       ${R.combo>1?`<div class="xs" style="color:var(--acc);margin-bottom:6px">🔥 Combo ×${R.combo}</div>`:""}
       <div class="sm">${esc(q.w)}</div>
+      ${R.cat&&R.est?meter(R.est,R.prevEst):""}
       ${q.ai?`<div class="mut xs" style="margin-top:8px">AI-generated question. If the rationale looks off, check it against your book.</div>`:""}
     </div>
     <div class="conf">${R.mode==="ai"?`<div class="row"><button class="btn ghost" data-act="aidone">Done</button><button class="btn primary" data-act="aimore">Next ♾️</button></div>`
@@ -394,8 +538,11 @@ function renderQuiz(){
       :`<button class="btn primary" data-act="next">${lastQ?"See results":"Next →"}</button>`}</div>`;
   }
   return `<div class="qhead"><button class="iconbtn" data-act="quit" aria-label="Quit">✕</button><div class="dots">${dots}</div>${R.mode==="ai"?`<span class="chip">♾️ ${R.res.filter(r=>r.ok).length}/${R.res.length}</span>`:""}</div>
+  <div class="deck">${rem>1?`<div class="ghost g2"></div>`:""}${rem>0?`<div class="ghost g1"></div>`:""}
+  <div class="qcard${R.anim?" in":""}" style="--rot:${R.rot||0}deg;--c:${DC[q.d]};${R.delayIn?"animation-delay:1.05s":""}">
+  <span class="qtab">${R.mode==="ai"?"♾️ fresh":R.mode==="cat"?`item ${R.i+1} · ends ${CAT_MIN}–${CAT_MAX}`:`card ${R.i+1} of ${R.n||R.set.length}`}</span>
   <div class="row" style="gap:6px;flex-wrap:wrap"><span class="chip t${q.t}">${TIERS[q.t][1]} ${TIERS[q.t][0]}</span><span class="chip">D${q.d} · ${DOMS[q.d][0]}</span>${R.mode==="boss"?`<span class="chip" style="color:var(--acc)">👑 3× XP</span>`:""}${S.seen[q.id]&&R.stage==="q"?`<span class="chip">🔁 review</span>`:""}</div>
-  <div class="stem">${esc(q.s)}</div>${opts}${bottom}`;
+  <div class="stem">${esc(q.s)}</div></div></div>${opts}${bottom}`;
 }
 
 function renderDone(){
@@ -403,10 +550,14 @@ function renderDone(){
   const pct=n?c/n:0;
   const title=pct===1?"Flawless 🏆":pct>=.8?"Strong work 💪":pct>=.6?"Solid 👍":"Good reps 🧠";
   const w=weakest();
-  return `<div style="padding-top:24px;text-align:center">
-    <div class="big pop">${c}/${n}</div>
-    <h2 style="margin:8px 0 4px">${title}</h2>
-    <div class="xpfly" style="font-size:20px">+${R.xp} XP</div>
+  const ver=R.mode==="cat"&&R.est?(()=>{const lo=R.est.m-1.96*R.est.sd,hi=R.est.m+1.96*R.est.sd;return lo>PASS?["PASS","Your ability estimate is confidently above the passing standard.","var(--ok)"]:hi<PASS?["NOT YET","Your ability estimate is confidently below the passing standard.","var(--bad)"]:[R.est.m>=PASS?"BORDERLINE PASS":"BORDERLINE FAIL","The item cap was reached before the estimate was certain.","var(--acc)"]})():null;
+  return `${R.cat&&R.est?`<div class="card" style="margin-top:18px">${ver?`<h2 style="color:${ver[2]};font-size:26px">${ver[0]}</h2><p class="sm mut" style="margin:4px 0 0">${ver[1]} Decided after ${R.res.length} items.</p>`:`<p class="sm mut" style="margin:0">CAT aims for cards you get right about half the time, so a lower score is normal. The estimate is what counts.</p>`}${meter(R.est,null)}</div>`:""}<div class="sheetd">
+    <div class="sd-score pop">${c}/${n}</div>
+    <div class="bubble pop" style="animation-delay:.1s">${title}</div>
+    <div class="star big2 pop" style="clip-path:${STAR};animation-delay:.2s">+${R.xp}<small>XP</small></div>
+    ${R.res.map((r,k)=>`<span class="rs ${r.ok?"":"miss"} pop" style="--c:${DC[r.q.d]};rotate:${[-8,6,-4,9,-6,5,-10,7,-3,8][k%10]}deg;animation-delay:${(.3+k*.08).toFixed(2)}s">${r.ok?"✓":"✕"}<small>D${r.q.d}</small></span>`).join("")}
+  </div>
+  <div style="text-align:center">
     <div class="row" style="justify-content:center;margin:14px 0;gap:6px;flex-wrap:wrap">
       <span class="chip">🔥 ${liveStreak()}-day streak</span>
       <span class="chip">Combo ×${R.maxCombo}</span>
@@ -449,6 +600,7 @@ function render(){
   else h=renderHome();
   if(showSettings)h+=renderSettings();
   app.innerHTML=h;
+  if(R){R.anim=false;R.delayIn=false;R.pop=null}
   const ed=document.getElementById("examdate");if(ed)ed.addEventListener("change",e=>{S.exam=e.target.value;save()});
 }
 
@@ -458,7 +610,7 @@ document.addEventListener("click",e=>{
   if(el.dataset.act==="closeset"&&e.target.closest("[data-stop]")&&!e.target.closest(".iconbtn"))return;
   const a=el.dataset.act;
   switch(a){
-    case"level":S.tier=+el.dataset.t;S.onboard=true;save();start("one");toast("First question. Takes 30 seconds 👇");break;
+    case"level":S.tier=+el.dataset.t;S.prior=BT[S.tier];S.onboard=true;save();start("one");toast("First question. Takes 30 seconds 👇");break;
     case"go":{const m=el.dataset.m,arg=el.dataset.a?+el.dataset.a:undefined;R=null;start(m,arg);break}
     case"one":R=null;start("one");break;
     case"pick":R.sel=+el.dataset.o;buzz(8);render();if(!S.conf){}setTimeout(()=>{const c=document.querySelector(".conf");c&&c.scrollIntoView({behavior:"smooth",block:"nearest"})},30);break;
