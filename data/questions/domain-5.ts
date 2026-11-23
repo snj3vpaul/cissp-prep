@@ -94,6 +94,12 @@ const rows: QRow[] = [
   ["5.5", "medium", "What should happen to the access of a user who is going on a six-month leave of absence?",
     ["Keep access active for convenience", "Suspend/disable access until return, per policy", "Delete the account permanently", "Share the password with a colleague to cover duties"], 1,
     "B is correct: suspension removes unused access while preserving the account. A leaves dormant access exploitable. C is excessive and disruptive. D violates accountability and policy."],
+  ["5.4", "medium", "In a zero trust architecture, which component evaluates an access request against policy and decides whether it should be allowed?",
+    ["Policy enforcement point (PEP)", "Policy decision point (PDP)", "Policy information point", "The identity provider's attribute store"], 1,
+    "B is correct: the PDP (the policy engine and policy administrator in NIST SP 800-207) makes the allow or deny decision. A is wrong because the PEP enforces that decision by enabling, monitoring and ending the connection. C is wrong because a policy information point supplies attributes and context but does not decide. D is wrong because an attribute store holds identity data used as input to the decision."],
+  ["5.4", "hard", "A defense agency wants access decisions that weigh the operational need for information against the real-time security risk of each request, so access normally denied can be granted when mission need is high enough. Which model fits BEST?",
+    ["Mandatory access control", "Rule-based access control", "Risk-Adaptable Access Control (RAdAC)", "Discretionary access control"], 2,
+    "C is correct: RAdAC compares a real-time risk estimate with operational need and can override the usual policy when the need outweighs the risk. A is wrong because MAC applies fixed labels and clearances with no case-by-case override. B is wrong because rule-based control applies static global rules. D is wrong because DAC leaves access to the owner's discretion rather than a measured risk decision."],
 ];
 
 export default buildQuestions(5, rows);

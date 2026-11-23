@@ -1,4 +1,4 @@
-import type { DomainId } from "@/lib/domains";
+import type { DomainId, OutlinePref } from "@/lib/domains";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
@@ -77,6 +77,8 @@ export interface Settings {
   sound: boolean;
   haptics: boolean;
   dailyGoal: number;
+  /** Which exam outline to study against; "auto" follows the exam date. */
+  outline?: OutlinePref;
 }
 
 export interface AppState {

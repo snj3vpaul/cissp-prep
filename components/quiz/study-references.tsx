@@ -1,5 +1,6 @@
 import { ArrowUpRight, BookOpen, FileText, Gavel, Globe, Landmark, ListChecks, ShieldCheck } from "lucide-react";
 import type { Reference } from "@/lib/types";
+import { outlineRef } from "@/data/references";
 import { cn } from "@/lib/utils";
 
 const ICON: Record<Reference["kind"], typeof BookOpen> = {
@@ -31,7 +32,7 @@ export function StudyReferences({ refs, className }: { refs: Reference[]; classN
         <BookOpen className="h-3.5 w-3.5" aria-hidden /> Study references
       </h3>
       <ol className="mt-3 space-y-2">
-        {refs.map((r, i) => {
+        {refs.map(outlineRef).map((r, i) => {
           const Icon = ICON[r.kind];
           const body = (
             <>

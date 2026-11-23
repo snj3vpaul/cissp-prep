@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { MINDMAPS } from "@/data/mindmaps";
 import { DOMAINS } from "@/lib/domains";
+import { DomainWeight } from "@/components/outline/domain-label";
 
 /**
  * Radial mindmap: domain at center, sub-objectives on an inner ring, key topics on an outer ring.
@@ -76,7 +77,7 @@ export function Mindmap({ domain, compact = false }: { domain: number; compact?:
       <circle cx={cx} cy={cy} r="110" fill="hsl(var(--card))" />
       <circle cx={cx} cy={cy} r="110" fill={`url(#mm-core-${domain})`} stroke={d.color} strokeWidth="2.5" />
       <text x={cx} y={cy - 22} textAnchor="middle" className="fill-muted-foreground" style={{ fontSize: 16, fontFamily: "var(--font-geist-mono)" }}>
-        DOMAIN {d.id} · {d.weight}%
+        DOMAIN {d.id} · <DomainWeight id={d.id} />
       </text>
       {wrap(d.name, 16).map((line, i, arr) => (
         <text key={i} x={cx} y={cy + 8 + i * 26 - ((arr.length - 1) * 26) / 2 + 10} textAnchor="middle" className="fill-foreground" style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Space Grotesk Variable', sans-serif" }}>

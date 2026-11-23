@@ -5,6 +5,7 @@ import { DOMAINS } from "@/lib/domains";
 import { QUESTIONS_BY_DOMAIN, QUESTIONS } from "@/data/questions";
 import { PageHeader } from "@/components/page-header";
 import { DomainDot } from "@/components/ui/card";
+import { DomainName, DomainWeight } from "@/components/outline/domain-label";
 
 export const metadata: Metadata = {
   title: "Quiz modes",
@@ -49,9 +50,9 @@ export default function QuizPage() {
                 <span className="inline-flex items-center gap-2">
                   <DomainDot color={d.color} /> DOMAIN {d.id}
                 </span>
-                {d.weight}%
+                <DomainWeight id={d.id} />
               </span>
-              <span className="mt-2 font-display font-semibold leading-snug">{d.name}</span>
+              <span className="mt-2 font-display font-semibold leading-snug"><DomainName id={d.id} fallback={d.name} /></span>
               <span className="mt-auto pt-3 text-xs text-muted-foreground">{QUESTIONS_BY_DOMAIN[d.id].length} questions</span>
             </Link>
           </li>

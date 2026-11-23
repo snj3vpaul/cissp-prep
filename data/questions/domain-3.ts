@@ -96,6 +96,16 @@ const rows: QRow[] = [
   ["3.10", "medium", "During which system lifecycle phase should security requirements be FIRST defined?",
     ["Initiation / requirements", "Implementation", "Operations and maintenance", "Disposal"], 0,
     "A is correct: requirements, including security, are captured during initiation so they shape design. B, C and D are too late; adding security then is costly and less effective."],
+  ["3.7", "medium", "An attacker contributes subtly mislabeled samples to a public dataset that a company uses to retrain its malware classifier. Later, one malware family is consistently classified as benign. Which attack is this?",
+    ["Data (model) poisoning", "Evasion using adversarial examples", "Model inversion", "Prompt injection"], 0,
+    "A is correct: poisoning corrupts the training data so the trained model learns the attacker's behavior. B is wrong because evasion manipulates inputs at prediction time against an untouched model. C is wrong because model inversion tries to reconstruct training data from the model's outputs. D is wrong because prompt injection targets the instructions given to language models, not a classifier's training set."],
+  ["3.7", "medium", "A finance clerk joins a video call in which the 'CFO' urgently orders a wire transfer. The face and voice were synthetically generated. Which control would MOST effectively prevent the loss?",
+    ["Deepfake-detection software on the video conferencing platform", "Out-of-band verification of payment instructions through a known, pre-registered channel", "Requiring higher video resolution on executive calls", "An annual awareness video about deepfakes"], 1,
+    "B is correct: a process control that confirms the request through an independent channel works however convincing the fake is. A is wrong because detection tools are unreliable against improving synthetic media and are easy to bypass on other channels. C is wrong because resolution does not reveal a well-made fake. D is wrong because awareness helps but, on its own, does not stop a convincing, urgent request.",
+    "Don't rely on spotting the fake; rely on a process the fake can't satisfy."],
+  ["3.1", "medium", "A health research consortium wants to publish aggregate statistics from patient records while mathematically limiting what can be learned about any single patient. Which privacy-enhancing technique BEST fits?",
+    ["Tokenization", "Differential privacy", "Data masking", "Full-disk encryption"], 1,
+    "B is correct: differential privacy adds calibrated noise so published results reveal provably little about any individual. A is wrong because tokenization replaces identifiers but does not protect what aggregate results reveal. C is wrong because masking hides values on display rather than limiting inference. D is wrong because disk encryption protects stored data, not what published statistics disclose."],
 ];
 
 export default buildQuestions(3, rows);

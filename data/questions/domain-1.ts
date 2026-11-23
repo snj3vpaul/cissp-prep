@@ -1,4 +1,4 @@
-/** Domain 1 — Security and Risk Management (16%). Original questions. Append-only. */
+/** Domain 1 — Security Governance and Risk Management (2027 outline; "Security and Risk Management" in 2024). Original questions. Append-only. */
 import { buildQuestions, type QRow } from "./_build";
 
 const rows: QRow[] = [
@@ -102,6 +102,14 @@ const rows: QRow[] = [
     ["Confidentiality, because medical data is highly sensitive", "Human safety, supported by break-glass procedures with monitoring", "Availability of the IT system's uptime SLA", "Regulatory fines for unauthorized disclosure"], 1,
     "B is correct: human life and safety always come first; break-glass access with auditing preserves accountability without endangering patients. A is wrong because confidentiality never outranks safety. C is wrong because SLA uptime is a technical metric, not the core concern. D is wrong because fines are a secondary consideration to life.",
     "Life safety is always the top priority."],
+  ["1.1", "medium", "A data science team plans to deploy an AI model that ranks job applicants. Which step BEST reflects ethical AI practice before deployment?",
+    ["Test the model for bias across protected groups and document how its decisions can be explained and challenged", "Keep the model's features confidential so applicants cannot game the ranking", "Deploy it and treat a low volume of complaints as evidence of fairness", "Rely on the vendor's statement that the model is unbiased"], 0,
+    "A is correct: fairness testing, explainability and a route to contest decisions are core ethical expectations for consequential AI, and they must be shown before people are affected. B is wrong because secrecy undermines transparency and accountability. C is wrong because affected applicants rarely know a model judged them, so few complaints proves nothing. D is wrong because the deploying organization remains accountable and must verify vendor claims.",
+    "You can delegate the work, not the accountability: verify fairness yourself."],
+  ["1.1", "hard", "An executive asks you to quietly use customer support chat logs to train a generative AI assistant. The privacy notice customers accepted says nothing about AI training. What should you do FIRST?",
+    ["Train the model, because the chat logs already belong to the company", "Strip names from the logs and train without informing anyone", "Raise it with leadership and the privacy and legal teams so the use can be assessed against the notice and consent before any training", "Report the executive to the data protection regulator"], 2,
+    "C is correct: the proposed use goes beyond the stated purpose, so the ethical and legal path is to escalate internally and assess it before acting. A is wrong because holding data does not permit any use of it. B is wrong because removing names is not reliable anonymization and still uses data outside its stated purpose without transparency. D is wrong because nothing has happened yet; internal escalation comes before going to a regulator.",
+    "Escalate internally first; act honorably and protect the people whose data it is."],
 ];
 
 export default buildQuestions(1, rows);

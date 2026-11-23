@@ -4,6 +4,9 @@ import { useSyncExternalStore } from "react";
 import type { AppState, Attempt, CardState, Flashcard, SessionSummary, Settings } from "@/lib/types";
 import { review, todayISO, newCardState, type Grade } from "@/lib/sm2";
 import { evaluateBadges } from "@/lib/badges";
+import { resolveOutline, setActiveOutline } from "@/lib/domains";
+
+const syncOutline = (s: AppState) => setActiveOutline(resolveOutline(s.settings.outline, s.settings.examDate));
 
 const KEY = "cissp-command-center:v1";
 export const STATE_VERSION = 1;
@@ -37,6 +40,7 @@ function load() {
   } catch {
     state = DEFAULT_STATE;
   }
+  syncOutline(state);
 }
 
 function persist() {
@@ -54,6 +58,7 @@ function set(updater: (s: AppState) => AppState) {
   state = newBadges.length
     ? { ...next, badges: { ...next.badges, ...Object.fromEntries(newBadges.map((b) => [b, Date.now()])) }, xp: next.xp + newBadges.length * 50 }
     : next;
+  syncOutline(state);
   persist();
   listeners.forEach((l) => l());
   if (newBadges.length && typeof window !== "undefined") {

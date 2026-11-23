@@ -422,6 +422,10 @@ const KEY="cissp-pocket-v1";
 const blank=()=>({v:1,updated:0,xp:0,tier:1,th:[],streak:0,best:0,lastGoal:-9,freezes:0,goal:5,days:{},dom:{},seen:{},boss:-1,exam:"",onboard:false,conf:true,ai:{},answered:0,bestCombo:0});
 let S=blank();
 try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(blank(),JSON.parse(raw));}catch(e){}
+/* Exam outline: 2027 weights (effective 15 Apr 2027) unless the exam date is before then. */
+const W24={1:16,2:10,3:13,4:13,5:13,6:12,7:13,8:10},W27={1:13.6,2:12,3:12.8,4:12.8,5:13.6,6:11.2,7:12.8,8:11.2};
+function applyOutline(){const n27=!S.exam||S.exam>="2027-04-15";for(const d in DOMS)DOMS[d][1]=(n27?W27:W24)[d];DOMS[1][0]=n27?"Security Governance & Risk":"Security & Risk Mgmt";}
+applyOutline();
 const today=()=>{const d=new Date();return Math.floor((d-d.getTimezoneOffset()*60000)/864e5)};
 let dbRef=null,saveT=null,syncState="";
 function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
@@ -772,7 +776,7 @@ function render(){
   if(showSettings)h+=renderSettings();
   app.innerHTML=h;
   if(R){R.anim=false;R.delayIn=false;R.pop=null}
-  const ed=document.getElementById("examdate");if(ed)ed.addEventListener("change",e=>{S.exam=e.target.value;save()});
+  const ed=document.getElementById("examdate");if(ed)ed.addEventListener("change",e=>{S.exam=e.target.value;applyOutline();save()});
 }
 
 document.addEventListener("click",e=>{
@@ -796,7 +800,7 @@ document.addEventListener("click",e=>{
     case"goal":S.goal=+el.dataset.g;save();render();break;
     case"conf":S.conf=el.dataset.v==="1";save();render();break;
     case"settier":S.tier=+el.dataset.t;S.th=[];save();render();break;
-    case"reset":if(!confirmReset){confirmReset=true;el.textContent="Tap again to confirm";el.style.color="var(--bad)";}else{S=blank();S.onboard=false;confirmReset=false;showSettings=false;save();R=null;render()}break;
+    case"reset":if(!confirmReset){confirmReset=true;el.textContent="Tap again to confirm";el.style.color="var(--bad)";}else{S=blank();S.onboard=false;applyOutline();confirmReset=false;showSettings=false;save();R=null;render()}break;
   }
 });
 
@@ -822,7 +826,7 @@ render();
       let remote=null;
       if(got){const v=typeof got.data==="function"?got.data():(got.data!==undefined?got.data:got);if(v&&v.json)remote=v}
       dbRef=ref;
-      if(remote&&remote.updated>S.updated){try{S=Object.assign(blank(),JSON.parse(remote.json));localStorage.setItem(KEY,remote.json)}catch(e){} syncState="☁︎ Synced";if(!R)render()}
+      if(remote&&remote.updated>S.updated){try{S=Object.assign(blank(),JSON.parse(remote.json));localStorage.setItem(KEY,remote.json);applyOutline()}catch(e){} syncState="☁︎ Synced";if(!R)render()}
       else if(S.onboard){save()}
       else syncState="☁︎ Sync on";
       const el=document.getElementById("sync");if(el)el.textContent=syncState;

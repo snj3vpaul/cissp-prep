@@ -194,4 +194,11 @@ export const QUESTION_REFS: Record<string, RefKey[]> = {
   "d8-q027": ["owasp-samm"],
   "d8-q028": ["owasp-session"],
   "d8-q030": ["owasp-code-review"],
+  // 2027-outline gap fillers
+  "d1-q031": ["nist-ai-rmf", "isc2-ethics"],
+  "d1-q032": ["isc2-ethics", "nist-privacy-fw", "nist-ai-rmf"],
+  "d3-q031": ["nist-ai-rmf"],
+  "d3-q033": ["nist-privacy-fw"],
+  "d5-q031": ["nist-800-207"],
+  "d8-q031": ["nist-800-218"],
 };

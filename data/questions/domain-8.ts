@@ -95,6 +95,12 @@ const rows: QRow[] = [
   ["8.3", "medium", "What is the main purpose of a code review checklist?",
     ["To slow down developers", "To ensure consistent coverage of common security issues during peer review", "To replace automated testing", "To grade developers"], 1,
     "B is correct: checklists improve consistency in reviews. A is not a purpose. C is wrong because reviews complement automated testing. D is not the intent."],
+  ["8.1", "medium", "A software company wants a vendor-neutral set of secure development practices that it can map its existing SDLC to and use when attesting to customers. Which framework BEST fits?",
+    ["NIST Secure Software Development Framework (SSDF, SP 800-218)", "Capability Maturity Model Integration (CMMI)", "ITIL", "PCI DSS"], 0,
+    "A is correct: the SSDF is a set of secure development practices designed to be added to any SDLC, and it is the basis of customer and government attestation forms. B is wrong because CMMI measures process maturity in general, not secure development practices. C is wrong because ITIL covers IT service management. D is wrong because PCI DSS protects cardholder data and is not a development framework."],
+  ["8.1", "easy", "What does 'shift left' mean in secure software development?",
+    ["Moving security testing to after deployment, when real traffic is available", "Moving security activities such as threat modeling, code analysis and testing earlier in the development life cycle", "Giving responsibility for security entirely to the operations team", "Releasing smaller features more often"], 1,
+    "B is correct: shifting left moves security earlier, where defects are cheaper and easier to fix. A is wrong because it moves security later. C is wrong because shift left spreads responsibility to developers rather than handing it to operations. D is wrong because release frequency is a delivery practice, not where security happens."],
 ];
 
 export default buildQuestions(8, rows);

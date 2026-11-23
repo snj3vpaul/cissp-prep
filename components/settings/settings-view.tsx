@@ -1,5 +1,8 @@
 "use client";
 
+import { OutlinePicker } from "@/components/outline/outline-picker";
+import { activeOutline } from "@/lib/domains";
+
 import { useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { Download, Moon, RotateCcw, Sun, Upload, Vibrate, Volume2 } from "lucide-react";
@@ -66,6 +69,10 @@ export function SettingsView() {
               Exam date
             </label>
             <input id="date" type="date" min={todayISO()} className={cn(field, "[color-scheme:light] dark:[color-scheme:dark]")} value={s.examDate ?? ""} onChange={(e) => actions.updateSettings({ examDate: e.target.value || undefined })} />
+          </div>
+          <div>
+            <p className="text-xs font-medium text-muted-foreground">Exam outline</p>
+            <OutlinePicker className="mt-1.5" />
           </div>
           <div>
             <label htmlFor="goal" className="text-xs font-medium text-muted-foreground">
@@ -179,7 +186,7 @@ export function SettingsView() {
           </div>
           <div>
             <dt className="text-xs text-muted-foreground">Exam outline</dt>
-            <dd className="font-mono">ISC2 · 15 Apr 2024</dd>
+            <dd className="font-mono">ISC2 · {activeOutline().effectiveLabel}</dd>
           </div>
         </dl>
       </Card>

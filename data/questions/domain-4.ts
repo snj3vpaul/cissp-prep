@@ -94,6 +94,9 @@ const rows: QRow[] = [
   ["4.1", "medium", "Which IPv6 feature presents a security consideration if not managed, because hosts can configure their own addresses?",
     ["IPsec support", "Stateless address autoconfiguration (SLAAC)", "Larger address space", "Flow labels"], 1,
     "B is correct: SLAAC and rogue router advertisements can let devices configure addresses outside administrative control, enabling spoofing or bypassing monitoring. A is a security feature. C is a design property. D is a QoS field with minimal security impact."],
+  ["4.1", "medium", "A company moves its storage traffic to iSCSI over the corporate Ethernet network. What is the MAIN security concern this converged protocol introduces?",
+    ["Storage traffic that used to run on an isolated storage network now shares the IP network, so it needs its own segmentation and authentication", "iSCSI encrypts everything by default, so packet inspection tools stop working", "iSCSI only works over wireless links, which are easy to intercept", "Converged protocols replace IP routing, so firewalls no longer apply"], 0,
+    "A is correct: convergence removes the physical isolation storage networks used to have, so storage traffic must be segmented (for example, dedicated VLANs) and authenticated (for example, CHAP), with encryption where needed. B is wrong because iSCSI is not encrypted by default; IPsec must be added. C is wrong because iSCSI runs over ordinary wired Ethernet. D is wrong because iSCSI runs on top of TCP/IP and is routed and filtered like other IP traffic."],
 ];
 
 export default buildQuestions(4, rows);

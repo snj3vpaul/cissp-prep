@@ -95,6 +95,13 @@ const rows: QRow[] = [
     ["Bring the usual laptop with all corporate data", "Provide a loaner device with minimal data, enforce MFA and VPN, and provide travel safety briefings and check-in procedures", "Cancel all international travel", "Let the executive decide without guidance"], 1,
     "B is correct: protect both the person and the data with a minimal-data device and duress/check-in procedures. A exposes sensitive data to seizure. C obstructs business. D abdicates responsibility for personnel safety.",
     "Protect people first, then data."],
+  ["7.13", "medium", "Department heads meet to talk through how they would respond to a regional power outage. No systems are activated. Which type of business continuity exercise is this, and what is its main benefit?",
+    ["A full-interruption test that proves actual recovery times", "A tabletop exercise that tests roles, decisions and plan gaps at low cost and risk", "A parallel test that runs the recovery site alongside production", "A simulation that fails systems over to the backup site"], 1,
+    "B is correct: a discussion-based tabletop walks participants through a scenario to expose gaps in roles, communications and decisions without operational risk. A is wrong because full interruption actually shuts down primary operations. C is wrong because a parallel test brings recovery systems up. D is wrong because nothing is failed over in this exercise."],
+  ["7.13", "hard", "A business continuity exercise reveals that the payroll team's recovery steps depend on a vendor contact who left the vendor months ago. What should happen NEXT?",
+    ["Rerun the whole exercise immediately to confirm the finding", "Record it as a finding with an owner and due date, update the plan and contact list, and track it to closure", "Postpone future exercises until the vendor relationship is renegotiated", "Note it in the meeting minutes for reference"], 1,
+    "B is correct: exercises exist to improve the plan, so findings need owners, plan updates and tracking. A is wrong because rerunning before fixing the gap adds nothing. C is wrong because stopping exercises leaves the organization less prepared. D is wrong because a note with no owner or follow-up rarely gets fixed.",
+    "The value of an exercise is in the corrective actions it produces."],
 ];
 
 export default buildQuestions(7, rows);
