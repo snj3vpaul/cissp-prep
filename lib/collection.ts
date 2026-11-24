@@ -1,3 +1,4 @@
+import { TRACK } from "@/lib/track";
 import type { AppState, SessionSummary } from "@/lib/types";
 import type { DomainId } from "@/lib/domains";
 
@@ -85,7 +86,7 @@ export function qualifiers(state: AppState): Qualifier[] {
       ts: s.ts,
       score,
       domain: s.mode === "domain" ? s.domain : undefined,
-      legendary: s.mode === "exam" && !!s.passed && s.total >= 100,
+      legendary: s.mode === "exam" && !!s.passed && s.total >= TRACK.exam.fullLengthMin,
       source: s.source === "quantumexams" ? `QuantumExams CAT · pass (${s.total} items)` : `${s.cat === "mini" ? "Mini CAT" : MODE_LABEL[s.mode]} · ${s.mode === "exam" ? `${score}/1000` : `${s.correct}/${s.total}`}`,
     });
   }
@@ -145,5 +146,5 @@ export function processCores(state: AppState): { grants: Grant[]; processed: str
 }
 
 export function hintFor(c: Creature) {
-  return c.domain === null ? "Pass a full CAT of 100+ items, here or logged from QuantumExams." : `Score 700+ on a Domain ${c.domain} drill, or on any quiz, check or memory session once earlier cores are found.`;
+  return c.domain === null ? (TRACK.exam.cat ? "Pass a full CAT of 100+ items, here or logged from QuantumExams." : "Pass a full 60-question CCSK simulation.") : `Score 700+ on a Domain ${c.domain} drill, or on any quiz, check or memory session once earlier cores are found.`;
 }

@@ -13,16 +13,59 @@ import { dueCardCount } from "@/lib/derived";
 import { layoutStyle, useLayoutPrefs } from "@/lib/layout-prefs";
 import { cn } from "@/lib/utils";
 import { UnlockWatcher } from "@/components/collection/unlock-watcher";
+import { TRACKS, TRACK_ID, switchTrack, type TrackId } from "@/lib/track";
 
-function Sidebar({ name }: { name?: string }) {
+const FLIP_KEY = "cissp-command-center:flipped";
+
+/** CISSP ⇄ CCSK switch. Flips the page out, swaps track (reload), and flips the new one in. */
+function TrackToggle({ className, active }: { className?: string; active: TrackId | null }) {
+  const [busy, setBusy] = useState(false);
+  const go = (id: TrackId) => {
+    if (id === TRACK_ID || busy) return;
+    setBusy(true);
+    const main = document.getElementById("main");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    try {
+      sessionStorage.setItem(FLIP_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    if (main && !reduce) {
+      main.style.transition = "transform .38s cubic-bezier(.5,0,.75,0), opacity .38s";
+      main.style.transformOrigin = "50% 40%";
+      main.style.transform = "perspective(1600px) rotateY(88deg)";
+      main.style.opacity = "0.2";
+      window.setTimeout(() => switchTrack(id), 360);
+    } else switchTrack(id);
+  };
+  return (
+    <div role="radiogroup" aria-label="Study track" className={cn("grid grid-cols-2 rounded-xl bg-muted p-1", className)}>
+      {(Object.keys(TRACKS) as TrackId[]).map((id) => (
+        <button
+          key={id}
+          type="button"
+          role="radio"
+          aria-checked={active === id}
+          onClick={() => go(id)}
+          className={cn("h-9 rounded-lg text-sm font-semibold transition-colors", active === id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
+        >
+          {TRACKS[id].name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Sidebar({ name, track }: { name?: string; track: TrackId | null }) {
   const pathname = usePathname();
   return (
     <aside className="z-sidebar z-anim fixed inset-y-0 left-0 hidden w-[var(--sb)] flex-col border-r border-border bg-muted/30 px-3 py-5 lg:flex">
       <Link href="/" className="flex items-center gap-2.5 rounded-lg px-2">
         <LogoMark className="h-7 w-7" />
-        <span className="font-display text-[15px] font-semibold">CISSP</span>
+        <span className="font-display text-[15px] font-semibold">{track ? TRACKS[track].name : "\u00a0"}</span>
       </Link>
-      <nav aria-label="Primary" className="mt-7">
+      <TrackToggle className="mt-5" active={track} />
+      <nav aria-label="Primary" className="mt-5">
         <ul className="space-y-0.5">
           {NAV.map((item) => {
             const active = isActive(pathname, item.href);
@@ -64,7 +107,7 @@ const TABS = [
   { href: "/flashcards", label: "Cards", icon: Layers },
 ];
 
-function TabBar({ due }: { due: number }) {
+function TabBar({ due, track }: { due: number; track: TrackId | null }) {
   const pathname = usePathname();
   const [moreFor, setMoreFor] = useState<string | null>(null);
   const more = moreFor === pathname;
@@ -81,6 +124,7 @@ function TabBar({ due }: { due: number }) {
             exit={{ opacity: 0, y: 12 }}
             className="fixed inset-x-3 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-50 rounded-2xl border border-border bg-background p-2 shadow-xl lg:hidden"
           >
+            <TrackToggle className="mb-2" active={track} />
             <ul className="grid grid-cols-2 gap-1">
               {extra.map((n) => (
                 <li key={n.href}>
@@ -129,7 +173,7 @@ function TabBar({ due }: { due: number }) {
   );
 }
 
-function MobileTopBar() {
+function MobileTopBar({ track }: { track: TrackId | null }) {
   const pathname = usePathname();
   const current = [...NAV, SETTINGS_NAV].find((n) => isActive(pathname, n.href));
   return (
@@ -137,7 +181,7 @@ function MobileTopBar() {
       <Link href="/" aria-label="Dashboard">
         <LogoMark className="h-7 w-7" />
       </Link>
-      <p className="font-display text-base font-semibold">{pathname === "/" ? "CISSP" : current?.label ?? "CISSP"}</p>
+      <p className="font-display text-base font-semibold">{pathname === "/" || !current ? (track ? TRACKS[track].name : "\u00a0") : current.label}</p>
       <ThemeToggle />
     </header>
   );
@@ -148,20 +192,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const state = useAppState();
   const hydrated = useHydrated();
   const due = hydrated ? dueCardCount(state) : 0;
+  const [flipIn] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const f = sessionStorage.getItem(FLIP_KEY) === "1";
+      sessionStorage.removeItem(FLIP_KEY);
+      return f;
+    } catch {
+      return false;
+    }
+  });
 
   return (
     <div data-zone={active ?? undefined} style={layoutStyle(prefs.values)} className="min-h-dvh">
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">
         Skip to content
       </a>
-      <Sidebar name={hydrated ? state.settings.name : undefined} />
+      <Sidebar name={hydrated ? state.settings.name : undefined} track={hydrated ? TRACK_ID : null} />
       <div className="z-anim min-w-0 lg:pl-[var(--sb)]">
-        <MobileTopBar />
-        <main id="main" className="pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
-          {children}
+        <MobileTopBar track={hydrated ? TRACK_ID : null} />
+        <main id="main" className={cn("pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0", hydrated && flipIn && "track-flip-in")}>
+          {/* Track data is read in the browser, so render pages only once hydrated. */}
+          {hydrated ? children : <div className="p-6 lg:p-10" aria-busy="true"><div className="h-10 w-48 animate-pulse rounded-xl bg-muted" /><div className="mt-6 h-64 animate-pulse rounded-2xl bg-muted" /></div>}
         </main>
       </div>
-      <TabBar due={due} />
+      <TabBar due={due} track={hydrated ? TRACK_ID : null} />
       <UnlockWatcher />
     </div>
   );

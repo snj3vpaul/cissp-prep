@@ -1,3 +1,5 @@
+import { TRACK_ID } from "@/lib/track";
+import { CCSK_RESOURCES } from "@/data/ccsk/memory";
 /** Curated free study aids. Descriptions are honest one-liners — update if offers change. */
 export interface Resource {
   name: string;
@@ -7,7 +9,7 @@ export interface Resource {
   tag: "Official" | "Practice" | "Mindmaps" | "Community" | "App";
 }
 
-export const RESOURCES: Resource[] = [
+const CISSP_RESOURCES: Resource[] = [
   {
     name: "Official CISSP Flash Cards",
     org: "ISC2",
@@ -65,3 +67,6 @@ export const RESOURCES: Resource[] = [
     tag: "Community",
   },
 ];
+
+/** Resources for the active study track. */
+export const RESOURCES: Resource[] = TRACK_ID === "ccsk" ? CCSK_RESOURCES : CISSP_RESOURCES;

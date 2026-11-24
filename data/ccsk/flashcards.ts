@@ -1,0 +1,100 @@
+/** CCSK v5 flashcards — original summaries of CSA Security Guidance v5 topics. Append only. */
+import { buildCcskCards, type KCard } from "./_build";
+
+const rows: Record<number, KCard[]> = {
+  1: [
+    ["NIST's 5 essential characteristics", "On-demand self-service, broad network access, resource pooling, rapid elasticity, measured service. ISO/IEC 17788 adds multi-tenancy.", "On Broad Resources, Rapidly Measured"],
+    ["3 service models", "IaaS (you manage OS and up), PaaS (you manage apps and data on a managed platform), SaaS (you manage users, settings and data)."],
+    ["4 deployment models", "Public, private, community, hybrid."],
+    ["CSA logical model", "Infrastructure (compute, network, storage), metastructure (management plane and APIs), applistructure (apps and services), infostructure (data).", "I Must Always Inform"],
+    ["Metastructure", "The protocols and mechanisms linking infrastructure to the other layers, including the management plane. The biggest cloud-specific difference from traditional IT."],
+    ["Shared responsibility model", "Provider secures what it runs; customer secures how it uses the service. Customers always own their data, identities and configurations."],
+    ["Cloud Controls Matrix (CCM)", "CSA's cloud control framework mapped to major standards, with guidance on provider and customer ownership. CAIQ is its questionnaire."],
+  ],
+  2: [
+    ["Governance hierarchy", "Organizational governance → cloud governance → policies → standards and baselines → controls and guardrails."],
+    ["Cloud registry", "Inventory of cloud providers, services and accounts with owners, data types and risk status."],
+    ["Guardrails", "Automated preventive and detective controls that keep teams within approved baselines without manual gates.", "Guardrails, not gates"],
+    ["Cloud Center of Excellence (CCoE)", "Cross-functional team that sets cloud standards, patterns and guidance."],
+    ["Contracts and SLAs in cloud", "Often the main way to define and enforce provider obligations: security, notification, data location, exit."],
+    ["STAR Registry", "CSA's public registry of provider CAIQ self-assessments and third-party audits and certifications."],
+  ],
+  3: [
+    ["Compliance inheritance", "You inherit the provider's certified controls for its scope, but must make your own use compliant."],
+    ["Provider attestations", "Third-party reports such as SOC 2 Type II or ISO 27001 certificates that let customers assess providers without auditing them directly."],
+    ["Continuous compliance", "Automated, API-driven checks that catch configuration drift between audits."],
+    ["Data sovereignty", "Data stored in a jurisdiction is subject to that jurisdiction's laws."],
+    ["CAIQ", "Consensus Assessments Initiative Questionnaire, aligned with the CCM, for documenting provider controls."],
+    ["GRC tools", "Centralize risk registers, control mappings, policies and compliance evidence."],
+  ],
+  4: [
+    ["Organization hierarchy", "Organization root → organizational units or folders → accounts, subscriptions or projects → resources."],
+    ["Accounts as boundaries", "Separate accounts isolate environments and limit blast radius."],
+    ["Organization policies (e.g., SCPs)", "Guardrails that cap permissions or deny actions for every account below; local admins can't override them."],
+    ["Landing zone", "Pre-built secure multi-account foundation: identity, networking, logging and guardrails."],
+    ["Central logging account", "Dedicated, restricted account receiving logs from all accounts so workload admins can't tamper with evidence."],
+    ["Multi-cloud challenge", "Different IAM, logging and configuration models make consistent policy and visibility harder; CSPM helps."],
+  ],
+  5: [
+    ["Identity is the new perimeter", "Remote management planes make identities and their permissions the main control point."],
+    ["IdP vs relying party", "The identity provider authenticates and issues assertions; the relying party (service provider) consumes them."],
+    ["SAML vs OAuth vs OIDC", "SAML: web SSO assertions. OAuth 2.0: delegated authorization. OIDC: identity layer on OAuth for authentication."],
+    ["Policy types", "Identity-based (on users/roles), resource-based (on the resource), organization guardrails, permission boundaries, session policies."],
+    ["Explicit deny wins", "In major cloud IAM, an explicit deny (including org guardrails) overrides any allow."],
+    ["Just-in-time access", "Time-bound, approved elevation instead of standing admin rights."],
+    ["Workload identity", "Roles or managed identities that issue short-lived credentials to code, so no static keys are needed."],
+  ],
+  6: [
+    ["Management plane audit logs", "Record every API call: who, what, when, from where. Essential for investigations."],
+    ["Ephemeral workload logging", "Stream logs off containers and functions immediately; they may vanish before anyone looks."],
+    ["Collection architecture", "Aggregate logs centrally in a protected account, then analyze in a SIEM or data lake."],
+    ["CSPM", "Continuously finds misconfigurations against policies and benchmarks."],
+    ["GenAI in monitoring", "Summarize alerts, query logs in plain language, draft investigations, with human validation."],
+  ],
+  7: [
+    ["Security groups vs NACLs", "Security groups: stateful, per resource. NACLs: stateless, per subnet.", "SG = Stateful, per Guest"],
+    ["Immutable infrastructure", "Replace instances with new known-good images instead of changing running ones."],
+    ["Infrastructure as code", "Version-controlled, reviewable, scannable infrastructure definitions."],
+    ["VPC peering", "Private connection between VPCs; usually non-transitive, so hubs like transit gateways are used for wider routing."],
+    ["Hybrid connectivity", "Site-to-site VPN over the internet, or dedicated private interconnects."],
+    ["SASE", "SD-WAN plus cloud-delivered security: secure web gateway, CASB, firewall-as-a-service, ZTNA."],
+  ],
+  8: [
+    ["Golden images", "Hardened, patched, scanned VM or container base images built in a pipeline."],
+    ["Container security layers", "Image (scan, sign), registry (access, scanning), orchestrator (protect the API, RBAC), runtime (non-root, read-only, monitoring)."],
+    ["PaaS customer duties", "Secure configuration of the service: access, network exposure, data protection."],
+    ["Serverless security", "Least-privilege role per function, validate every event input, keep secrets out of code."],
+    ["AI workload risks", "Prompt injection, data and model poisoning, sensitive data leakage, model theft."],
+  ],
+  9: [
+    ["Storage types", "Object (API, buckets), block (volumes attached to instances), file (shared), database, data lake."],
+    ["Encryption key options", "Provider-managed keys; customer-managed keys in a KMS or HSM; customer-supplied keys held outside the provider."],
+    ["Crypto-shredding", "Destroy keys to make cloud data unrecoverable when media can't be wiped."],
+    ["Tokenization", "Replace sensitive values with tokens; the mapping lives in a secured vault."],
+    ["DSPM", "Discover and classify sensitive data across clouds and assess exposure and access."],
+    ["Top data breach cause", "Misconfigured access policies, such as public buckets."],
+  ],
+  10: [
+    ["Secure SDLC in cloud", "Security in every phase: requirements, design (threat modeling), build, test, deploy, operate."],
+    ["Pipeline security tests", "SAST (code), SCA (dependencies), IaC scanning, container scanning, DAST (running app)."],
+    ["Pipeline as crown jewel", "CI/CD holds deploy credentials: protect access, secrets and artifact integrity."],
+    ["Secrets management", "Store secrets in a manager, fetch at runtime via workload identity, rotate."],
+    ["API gateway", "Front door for APIs: authentication, rate limiting, validation, logging."],
+  ],
+  11: [
+    ["IR lifecycle", "Preparation → detection and analysis → containment, eradication and recovery → post-incident activity."],
+    ["Cloud IR preparation", "Logging on and retained, pre-approved responder access, provider escalation paths, automation."],
+    ["Cloud containment", "Isolate via security group, snapshot disks, capture metadata; avoid destroying evidence."],
+    ["Leaked key: first step", "Disable or revoke it, then review its activity in audit logs."],
+    ["Resilience patterns", "Multiple availability zones, multi-region for critical systems, isolated immutable backups."],
+  ],
+  12: [
+    ["Zero Trust principle", "Never trust implicitly; verify each request on identity, device and context."],
+    ["PDP vs PEP", "Policy decision point decides; policy enforcement point enforces."],
+    ["Software-defined perimeter", "Services stay hidden until the user and device are authenticated and authorized."],
+    ["AI governance", "Policy and inventory, risk assessment, data controls, human oversight."],
+    ["Cloud vulnerability management", "Agent or API-based scanning tied to images and pipelines; prioritize by exploitability, exposure and criticality."],
+  ],
+};
+
+export const CCSK_FLASHCARDS = Object.entries(rows).flatMap(([d, r]) => buildCcskCards(Number(d), r));

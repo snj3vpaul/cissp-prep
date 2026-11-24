@@ -1,3 +1,5 @@
+import { TRACK_ID } from "@/lib/track";
+import { CCSK_MNEMONICS } from "@/data/ccsk/memory";
 /** Memory hooks. Plain data — add your own by appending to the array. */
 export interface Mnemonic {
   id: string;
@@ -8,7 +10,7 @@ export interface Mnemonic {
   why: string; // how it helps on the exam
 }
 
-export const MNEMONICS: Mnemonic[] = [
+const CISSP_MNEMONICS: Mnemonic[] = [
   { id: "cia", domain: 1, title: "CIA triad (and its evil twin)", hook: "CIA vs DAD", expansion: ["Confidentiality ↔ Disclosure", "Integrity ↔ Alteration", "Availability ↔ Destruction"], why: "Every control protects at least one leg. Name the violated property to eliminate wrong answers fast." },
   { id: "iaaa", domain: 5, title: "Access control sequence", hook: "I Am An Auditor (IAAA)", expansion: ["Identification", "Authentication", "Authorization", "Accountability"], why: "Order matters: you claim, prove, get rights, then are held accountable via logs." },
   { id: "aaa", domain: 5, title: "AAA services", hook: "AAA", expansion: ["Authentication — who are you?", "Authorization — what can you do?", "Accounting — what did you do?"], why: "RADIUS/TACACS+ questions hinge on which of the three a protocol separates or combines." },
@@ -45,3 +47,6 @@ export const MNEMONICS: Mnemonic[] = [
   { id: "coupling", domain: 8, title: "Good software design", hook: "High Cohesion, Low Coupling", expansion: ["Cohesion — module does one thing well", "Coupling — minimal dependencies between modules"], why: "High cohesion + low coupling = easier to secure, test and change." },
   { id: "manager", domain: 1, title: "The CISSP mindset", hook: "Life > Law > Business > Tech", expansion: ["Protect human safety first", "Comply with law and ethics", "Support business objectives and owners", "Then choose the technical control"], why: "When two answers look right, pick the one a risk-aware manager would choose: assess, involve the owner, follow process." },
 ];
+
+/** Mnemonics for the active study track. */
+export const MNEMONICS: Mnemonic[] = TRACK_ID === "ccsk" ? CCSK_MNEMONICS : CISSP_MNEMONICS;

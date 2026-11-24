@@ -1,5 +1,6 @@
 "use client";
 
+import { TRACK } from "@/lib/track";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -34,6 +35,8 @@ interface Props {
   durationMs: number;
   /** CAT session: verdict from the ability estimate, confidence graph and domain feedback. */
   cat?: CatConfig;
+  /** Linear exam scored by percentage of the full set. */
+  passPct?: number;
   onRestart?: () => void;
 }
 
@@ -52,7 +55,7 @@ export function toFlashcard(q: Question): Flashcard {
   };
 }
 
-export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat, onRestart }: Props) {
+export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat, passPct, onRestart }: Props) {
   const reduce = useReducedMotion();
   const correct = results.filter((r) => r.correct).length;
   const pct = results.length ? Math.round((correct / results.length) * 100) : 0;
@@ -60,8 +63,9 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat,
   const est = cat && results.length ? estimate(items) : null;
   const catVerdict = cat && est ? verdict(cat, results.length, est) : null;
   const band = est ? bandScaled(est) : null;
-  const scaled = est ? toScaled(est.theta) : exam ? scaledScore(items) : null;
-  const passed = catVerdict ? isPass(catVerdict) : scaled !== null ? scaled >= 700 && results.length >= 100 : pct >= 70;
+  const scaled = est ? toScaled(est.theta) : exam && !passPct ? scaledScore(items) : null;
+  const examPct = passPct ? Math.round((correct / Math.max(1, totalPlanned)) * 100) : null; // unanswered count as wrong
+  const passed = catVerdict ? isPass(catVerdict) : examPct !== null ? examPct >= (passPct ?? 80) : scaled !== null ? scaled >= 700 && results.length >= 100 : pct >= 70;
   const catTitle: Record<Verdict, string> = {
     pass: "Pass: confidently above the standard",
     fail: "Fail: confidently below the standard",
@@ -87,21 +91,22 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat,
     <div className="mx-auto max-w-4xl space-y-4 pb-20 pt-4">
       <Card glow>
         <div className="grid items-center gap-6 sm:grid-cols-[auto_1fr]">
-          <ProgressRing value={scaled !== null ? Math.round(scaled / 10) : pct} size={150} stroke={12} label={scaled !== null ? `Scaled score ${scaled} of 1000` : `Score ${pct}%`}>
+          <ProgressRing value={scaled !== null ? Math.round(scaled / 10) : (examPct ?? pct)} size={150} stroke={12} label={scaled !== null ? `Scaled score ${scaled} of 1000` : `Score ${examPct ?? pct}%`}>
             <div className="text-center">
-              <p className="font-display text-3xl font-bold tabular-nums">{scaled !== null ? scaled : `${pct}%`}</p>
-              <p className="text-[11px] text-muted-foreground">{scaled !== null ? "/ 1000 est." : `${correct}/${results.length}`}</p>
+              <p className="font-display text-3xl font-bold tabular-nums">{scaled !== null ? scaled : `${examPct ?? pct}%`}</p>
+              <p className="text-[11px] text-muted-foreground">{scaled !== null ? "/ 1000 est." : `${correct}/${passPct ? totalPlanned : results.length}`}</p>
             </div>
           </ProgressRing>
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">{exam ? "Simulation complete" : "Session complete"}</p>
             <h1 className="mt-1 text-3xl font-bold">
-              {catVerdict ? catTitle[catVerdict] : exam ? (passed ? "Pass — mission accomplished 🎯" : results.length < 100 ? "Ended early" : "Not yet — keep training") : pct >= 85 ? "Outstanding" : pct >= 70 ? "Solid work" : "Good reps — review the misses"}
+              {catVerdict ? catTitle[catVerdict] : examPct !== null ? (passed ? `Pass: ${examPct}% (${passPct}% needed)` : `Not yet: ${examPct}% (${passPct}% needed)`) : exam ? (passed ? "Pass — mission accomplished 🎯" : results.length < 100 ? "Ended early" : "Not yet — keep training") : pct >= 85 ? "Outstanding" : pct >= 70 ? "Solid work" : "Good reps — review the misses"}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
               {correct} of {results.length} correct{!cat && results.length < totalPlanned ? ` (${totalPlanned - results.length} not reached)` : ""} · {secs(durationMs)} total · {secs(avgMs)} avg per question
               {cat && band && ` · Ended after ${results.length} items (${cat.min}–${cat.max}). 95% range ${band.lo}–${band.hi}.`}
-              {exam && " · Passing line 700/1000. Scaled score is an estimate, not ISC2's psychometric model."}
+              {exam && !passPct && " · Passing line 700/1000. Scaled score is an estimate, not ISC2's psychometric model."}
+              {passPct && ` · Unanswered questions count as wrong. Passing is ${passPct}%.`}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {missed.length > 0 && (
@@ -128,6 +133,16 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat,
           </div>
         </div>
       </Card>
+
+      {passPct && results.length > 0 && (
+        <Card>
+          <CardTitle>Results by domain</CardTitle>
+          <p className="mt-1 text-xs text-muted-foreground">Like the real results screen: how many questions each domain had and how many you got right.</p>
+          <div className="mt-4">
+            <DomainFeedback items={items} />
+          </div>
+        </Card>
+      )}
 
       {cat && results.length > 0 && (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
@@ -189,7 +204,7 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat,
 
         <Card>
           <CardTitle>Time per question</CardTitle>
-          <p className="text-xs text-muted-foreground">Target on exam day ≈ 72s per item (180 min ÷ 150).</p>
+          <p className="text-xs text-muted-foreground">Target on exam day ≈ {Math.round((TRACK.exam.minutes * 60) / TRACK.exam.items)}s per item ({TRACK.exam.minutes} min ÷ {TRACK.exam.items}).</p>
           <div className="mt-4 flex h-40 items-end gap-[2px]" role="img" aria-label={`Average ${secs(avgMs)} per question`}>
             {results.map((r, i) => (
               <div

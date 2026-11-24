@@ -6,9 +6,14 @@ import { review, todayISO, newCardState, type Grade } from "@/lib/sm2";
 import { evaluateBadges } from "@/lib/badges";
 import { resolveOutline, setActiveOutline } from "@/lib/domains";
 
-const syncOutline = (s: AppState) => setActiveOutline(resolveOutline(s.settings.outline, s.settings.examDate));
+const syncOutline = (s: AppState) => {
+  if (TRACK_ID === "cissp") setActiveOutline(resolveOutline(s.settings.outline, s.settings.examDate));
+};
 
-const KEY = "cissp-command-center:v1";
+import { TRACK, TRACK_ID } from "@/lib/track";
+
+/** Each study track keeps its own saved progress. */
+const KEY = TRACK.storageKey;
 export const STATE_VERSION = 1;
 const MAX_ATTEMPTS = 5000;
 

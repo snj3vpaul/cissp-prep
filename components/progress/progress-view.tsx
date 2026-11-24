@@ -1,5 +1,7 @@
 "use client";
 
+import { TRACK } from "@/lib/track";
+
 import { sessionTitle } from "@/lib/derived";
 
 import { useMemo, useState } from "react";
@@ -40,7 +42,7 @@ export function ProgressView() {
   }
 
   const profile = {
-    app: "CISSP Command Center",
+    app: `${TRACK.name} study cockpit`,
     level: lvl.level,
     rank: lvl.rank,
     xp: state.xp,

@@ -8,8 +8,8 @@ import { AppShell } from "@/components/app-shell";
 import { BadgeToaster } from "@/components/badge-toaster";
 
 export const metadata: Metadata = {
-  title: { default: "CISSP", template: "%s · CISSP" },
-  description: "My personal CISSP study cockpit.",
+  title: { default: "Study cockpit", template: "%s · Study cockpit" },
+  description: "Personal CISSP and CCSK study cockpit.",
   robots: { index: false, follow: false, nocache: true },
   icons: { icon: "/icon.svg" },
 };

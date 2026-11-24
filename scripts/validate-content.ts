@@ -5,6 +5,10 @@
 import { QUESTIONS } from "../data/questions";
 import { FLASHCARDS } from "../data/flashcards";
 import { OBJECTIVES, QUESTION_REFS, REFS } from "../data/references";
+import { CCSK_QUESTIONS_BY_DOMAIN } from "../data/questions";
+import { CCSK_FLASHCARDS } from "../data/ccsk/flashcards";
+import { CCSK_OBJECTIVES } from "../data/ccsk/outline";
+import { CCSK_MINDMAPS, CCSK_MNEMONICS } from "../data/ccsk/memory";
 
 const errors: string[] = [];
 const ids = new Set(QUESTIONS.map((q) => q.id));
@@ -30,6 +34,33 @@ for (const c of FLASHCARDS) {
   cardIds.add(c.id);
   if (!c.front.trim() || !c.back.trim()) errors.push(`${c.id}: empty side`);
 }
+
+// ---- CCSK v5 track ----
+const ccsk = Object.values(CCSK_QUESTIONS_BY_DOMAIN).flat();
+const ccskIds = new Set<string>();
+const answerSpread = [0, 0, 0, 0];
+for (const q of ccsk) {
+  if (ccskIds.has(q.id)) errors.push(`duplicate CCSK question id ${q.id}`);
+  ccskIds.add(q.id);
+  if (q.options.length !== 4 || new Set(q.options).size !== 4) errors.push(`${q.id}: needs 4 distinct options`);
+  if (!CCSK_OBJECTIVES[q.subObjective]) errors.push(`${q.id}: unknown CCSK topic ${q.subObjective}`);
+  if (!q.subObjective.startsWith(`${q.domain}.`)) errors.push(`${q.id}: topic ${q.subObjective} not in domain ${q.domain}`);
+  const titles = q.references.map((r) => r.title).join(" | ");
+  if (!titles.includes("Official Study Guide")) errors.push(`${q.id}: missing CCSK Study Guide citation`);
+  if (!titles.includes("Security Guidance")) errors.push(`${q.id}: missing Security Guidance v5 citation`);
+  if (!new RegExp(`\\b${"ABCD"[q.answerIndex]} is correct`).test(q.rationale)) errors.push(`${q.id}: rationale doesn't name the correct letter`);
+  answerSpread[q.answerIndex]++;
+}
+for (let d = 1; d <= 12; d++) {
+  if ((CCSK_QUESTIONS_BY_DOMAIN[d]?.length ?? 0) < 8) errors.push(`CCSK domain ${d}: fewer than 8 questions`);
+  if (!CCSK_MINDMAPS[d]?.length) errors.push(`CCSK domain ${d}: no mind map`);
+}
+const kc = new Set<string>();
+for (const c of CCSK_FLASHCARDS) {
+  if (kc.has(c.id)) errors.push(`duplicate CCSK card ${c.id}`);
+  kc.add(c.id);
+}
+console.log(`CCSK v5: ${ccsk.length} questions (answer spread ${answerSpread.join("/")}) · ${CCSK_FLASHCARDS.length} flashcards · ${CCSK_MNEMONICS.length} memory hooks`);
 
 const used = new Set(QUESTIONS.flatMap((q) => q.references.map((r) => r.key).filter(Boolean)));
 const unused = Object.keys(REFS).filter((k) => !used.has(k));

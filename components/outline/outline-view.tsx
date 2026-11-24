@@ -1,5 +1,8 @@
 "use client";
 
+import { TRACK_ID } from "@/lib/track";
+import { CcskOutline } from "@/components/outline/ccsk-outline";
+
 import Link from "next/link";
 import { useMemo } from "react";
 import { ArrowUpRight } from "lucide-react";
@@ -29,6 +32,10 @@ function Section({ title, sub, children }: { title: string; sub?: string; childr
 }
 
 export function OutlineView() {
+  return TRACK_ID === "ccsk" ? <CcskOutline /> : <CisspOutline />;
+}
+
+function CisspOutline() {
   const state = useAppState();
   const hydrated = useHydrated();
   const rows = useMemo(() => objectiveRows(state.attempts), [state.attempts]);

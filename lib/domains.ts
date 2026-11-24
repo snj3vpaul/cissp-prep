@@ -4,7 +4,10 @@
  *  - 2027: effective 15 April 2027 (CISSP Certification Exam Outline, revised 16 Oct 2026)
  * `name` and `weight` follow the active outline (see setActiveOutline / resolveOutline).
  */
-export type DomainId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+import { TRACK_ID } from "@/lib/track";
+
+/** 1–8 for CISSP, 1–12 for CCSK v5. */
+export type DomainId = number;
 export type OutlineId = "2024" | "2027";
 export type OutlinePref = "auto" | OutlineId;
 
@@ -66,7 +69,7 @@ const BASE: (Omit<Domain, "name" | "weight"> & { baseName: string })[] = [
   { id: 8, slug: "software-development-security", baseName: "Software Development Security", short: "AppSec", color: "#E66767", tagline: "SDLC, secure coding, software risk" },
 ];
 
-export const DOMAINS: Domain[] = BASE.map(({ baseName, ...b }) => {
+export const CISSP_DOMAINS: Domain[] = BASE.map(({ baseName, ...b }) => {
   const d = { ...b } as Domain;
   Object.defineProperties(d, {
     name: { enumerable: true, get: () => OUTLINES[active].names[b.id] ?? baseName },
@@ -74,6 +77,29 @@ export const DOMAINS: Domain[] = BASE.map(({ baseName, ...b }) => {
   });
   return d;
 });
+
+/**
+ * CCSK v5 domains (CSA Security Guidance v5 / CCSK v5 Study Guide). CSA does not publish
+ * per-domain weights, so each domain is weighted equally (60 items ≈ 5 per domain).
+ */
+const CCSK_BASE: Omit<Domain, "weight">[] = [
+  { id: 1, slug: "ccsk-cloud-concepts-architectures", name: "Cloud Computing Concepts & Architectures", short: "Concepts", color: "#3987E5", tagline: "Definitions, models, logical model, shared responsibility" },
+  { id: 2, slug: "ccsk-cloud-governance", name: "Cloud Governance", short: "Governance", color: "#D95926", tagline: "Governance hierarchy, policies, CCM, cloud registry" },
+  { id: 3, slug: "ccsk-risk-audit-compliance", name: "Risk, Audit & Compliance", short: "Risk & audit", color: "#199E70", tagline: "Cloud risk, compliance inheritance, attestations, GRC" },
+  { id: 4, slug: "ccsk-organization-management", name: "Organization Management", short: "Org mgmt", color: "#C98500", tagline: "Org hierarchy, accounts, guardrails, landing zones" },
+  { id: 5, slug: "ccsk-identity-access-management", name: "Identity & Access Management", short: "IAM", color: "#D55181", tagline: "Federation, strong authN, policy types, least privilege" },
+  { id: 6, slug: "ccsk-security-monitoring", name: "Security Monitoring", short: "Monitoring", color: "#0CA30C", tagline: "Telemetry sources, collection, detection, GenAI" },
+  { id: 7, slug: "ccsk-infrastructure-networking", name: "Infrastructure & Networking", short: "Networking", color: "#9085E9", tagline: "Virtual networks, connectivity, IaC, Zero Trust & SASE" },
+  { id: 8, slug: "ccsk-cloud-workload-security", name: "Cloud Workload Security", short: "Workloads", color: "#E66767", tagline: "VMs, containers, PaaS, serverless, AI workloads" },
+  { id: 9, slug: "ccsk-data-security", name: "Data Security", short: "Data", color: "#2CA6A4", tagline: "Classification, storage types, encryption & keys" },
+  { id: 10, slug: "ccsk-application-security", name: "Application Security", short: "AppSec", color: "#B07AA1", tagline: "Secure SDLC, DevSecOps, CI/CD, app IAM" },
+  { id: 11, slug: "ccsk-incident-response-resilience", name: "Incident Response & Resilience", short: "IR & resilience", color: "#7A8B99", tagline: "Cloud IR lifecycle, forensics, resilience" },
+  { id: 12, slug: "ccsk-related-technologies-strategies", name: "Related Technologies & Strategies", short: "Zero Trust & AI", color: "#E09F3E", tagline: "Zero Trust, AI, threat & vulnerability management" },
+];
+export const CCSK_DOMAINS: Domain[] = CCSK_BASE.map((d) => ({ ...d, weight: Math.round((100 / 12) * 100) / 100 }));
+
+/** Domains of the active study track. */
+export const DOMAINS: Domain[] = TRACK_ID === "ccsk" ? CCSK_DOMAINS : CISSP_DOMAINS;
 
 export const EXAM_FORMAT = {
   minItems: 100,

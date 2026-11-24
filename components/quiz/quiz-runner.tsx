@@ -30,6 +30,8 @@ interface Props {
   level?: number;
   /** Computerized adaptive test: variable length, IRT ability estimate, confident stop. */
   cat?: CatConfig;
+  /** Linear exam with a fixed question set scored by percentage (e.g. CCSK: 80%). */
+  passPct?: number;
   onRestart?: () => void;
 }
 
@@ -40,10 +42,10 @@ const fmt = (s: number) => {
   return `${h ? `${h}:` : ""}${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 };
 
-export function QuizRunner({ mode, title, domain, questions, exam = false, examItems = 125, timeLimitSec, level, cat, onRestart }: Props) {
+export function QuizRunner({ mode, title, domain, questions, exam = false, examItems = 125, timeLimitSec, level, cat, passPct, onRestart }: Props) {
   const { settings } = useAppState();
   const reduce = useReducedMotion();
-  const plan = useMemo(() => (exam ? planExam(examItems) : null), [exam, examItems]);
+  const plan = useMemo(() => (exam && !questions ? planExam(examItems) : null), [exam, examItems, questions]);
 
   const [served, setServed] = useState<Question[]>(() => {
     if (cat) {
@@ -56,7 +58,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
     }
     return questions ?? [];
   });
-  const total = cat ? cat.max : exam ? examItems : served.length;
+  const total = cat ? cat.max : exam && plan ? examItems : served.length;
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -86,7 +88,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
     const correct = res.filter((r) => r.correct).length;
     const resp = res.map((r) => ({ difficulty: r.question.difficulty, correct: r.correct }));
     const est = cat && res.length ? estimate(resp) : null;
-    const scaled = est ? toScaled(est.theta) : exam ? scaledScore(resp) : undefined;
+    const scaled = est ? toScaled(est.theta) : exam && !passPct ? scaledScore(resp) : undefined;
     const catPassed = cat && est ? isPass(verdict(cat, res.length, est)) : undefined;
     if (res.length) {
       actions.recordSession({
@@ -98,7 +100,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
         ms: now - startedAt,
         ts: now,
         scaled,
-        passed: cat ? catPassed : exam ? (scaled ?? 0) >= 700 && res.length >= 100 : undefined,
+        passed: cat ? catPassed : passPct ? (correct / Math.max(1, served.length)) * 100 >= passPct : exam ? (scaled ?? 0) >= 700 && res.length >= 100 : undefined,
         level,
         cat: cat?.id,
         traj: cat ? trajectory(resp).map((e) => toScaled(e.theta)) : undefined,
@@ -218,6 +220,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
         exam={exam}
         totalPlanned={total}
         cat={cat}
+        passPct={passPct}
         durationMs={(finishedAt ?? startedAt) - startedAt}
         onRestart={onRestart}
       />

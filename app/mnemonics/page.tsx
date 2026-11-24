@@ -4,7 +4,6 @@ import { MnemonicVault } from "@/components/mnemonics/vault";
 
 export const metadata: Metadata = {
   title: "Mnemonics & Mindmap Vault",
-  description: "Classic CISSP memory hooks — CIA/DAD, IAAA, OSI, Bell–LaPadula vs Biba, incident response and more — plus radial mindmaps for all 8 domains.",
 };
 
 export default function MnemonicsPage() {

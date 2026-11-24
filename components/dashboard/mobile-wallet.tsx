@@ -37,9 +37,13 @@ function Pill({ children, dark = true }: { children: React.ReactNode; dark?: boo
 
 /** Tiny "map" of the eight domains with the weakest one pinned. */
 function DomainMap({ weakest }: { weakest: DomainId }) {
-  const pts: [number, number][] = [
-    [22, 30], [58, 18], [96, 34], [128, 20], [30, 66], [70, 58], [108, 70], [140, 54],
-  ];
+  // One pin per domain, scattered over a two-row "map".
+  const pts: [number, number][] = DOMAINS.map((_, i) => {
+    const cols = Math.ceil(DOMAINS.length / 2);
+    const row = i < cols ? 0 : 1;
+    const col = row ? i - cols : i;
+    return [16 + (col * 128) / Math.max(1, cols - 1), (row ? 62 : 24) + (col % 2 ? 8 : -4)];
+  });
   return (
     <svg viewBox="0 0 160 84" className="mt-2 h-14 w-full" aria-hidden>
       <g fill="none" stroke="currentColor" className="text-muted-foreground/25" strokeWidth="1.2">

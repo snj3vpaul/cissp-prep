@@ -1,3 +1,5 @@
+import { TRACK_ID } from "@/lib/track";
+import { CCSK_MINDMAPS } from "@/data/ccsk/memory";
 /** Domain mindmaps rendered as radial SVG diagrams. Branches follow the 2024 outline sub-objectives. */
 export interface MindmapBranch {
   code: string;
@@ -5,7 +7,7 @@ export interface MindmapBranch {
   leaves: string[];
 }
 
-export const MINDMAPS: Record<number, MindmapBranch[]> = {
+const CISSP_MINDMAPS: Record<number, MindmapBranch[]> = {
   1: [
     { code: "1.1", label: "Ethics", leaves: ["ISC2 canons", "Org code of ethics"] },
     { code: "1.2", label: "Security concepts", leaves: ["CIA", "Authenticity", "Non-repudiation"] },
@@ -80,3 +82,6 @@ export const MINDMAPS: Record<number, MindmapBranch[]> = {
     { code: "8.5", label: "Secure coding", leaves: ["Injection", "XSS/CSRF", "APIs", "Input validation"] },
   ],
 };
+
+/** Mindmaps for the active study track. */
+export const MINDMAPS: Record<number, MindmapBranch[]> = TRACK_ID === "ccsk" ? CCSK_MINDMAPS : CISSP_MINDMAPS;

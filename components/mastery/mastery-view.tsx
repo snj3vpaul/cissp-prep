@@ -1,5 +1,8 @@
 "use client";
 
+import { DOMAINS } from "@/lib/domains";
+import { TRACK } from "@/lib/track";
+
 import { useMemo, useState } from "react";
 import type { DomainId } from "@/lib/domains";
 import { getDomain } from "@/lib/domains";
@@ -35,7 +38,7 @@ export function MasteryView() {
     <div className="mx-auto max-w-[1240px] px-4 pb-16 pt-6 lg:px-10 lg:pt-10">
       <h1 className="text-2xl font-semibold sm:text-[28px]">Mastery model</h1>
       <p className="mt-1.5 max-w-3xl text-sm text-muted-foreground">
-        A living model of how well I know each of the eight domains. Petal length is mastery: recent accuracy (newer answers count more) scaled by how much of the domain I’ve covered. Levels rise with every distinct question I get right.
+        A living model of how well I know each of the {DOMAINS.length} {TRACK.name} domains. Petal length is mastery: recent accuracy (newer answers count more) scaled by how much of the domain I’ve covered. Levels rise with every distinct question I get right.
       </p>
 
       <div className="mt-8 grid items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
@@ -46,7 +49,7 @@ export function MasteryView() {
               <span className="block rounded-full bg-card px-2 text-xs font-semibold">LV {lv.level}</span>
             </span>
             <span className="tabular-nums">{state.xp.toLocaleString()} XP</span>
-            <span className="text-muted-foreground">· 8 domains</span>
+            <span className="text-muted-foreground">· {DOMAINS.length} domains</span>
           </p>
         </div>
 

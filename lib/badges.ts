@@ -1,3 +1,4 @@
+import { TRACK } from "@/lib/track";
 import type { AppState } from "@/lib/types";
 import { DOMAINS } from "@/lib/domains";
 import { computeStreak } from "@/lib/streak";
@@ -32,7 +33,7 @@ export const BADGES: BadgeDef[] = [
     test: (s) => DOMAINS.every((d) => s.attempts.filter((a) => a.domain === d.id).length >= 10),
   },
   { id: "mock-finisher", name: "Marathoner", description: "Finish a full exam simulation", emoji: "🏃", test: (s) => s.sessions.some((x) => x.mode === "exam" && !x.source && x.cat !== "mini") },
-  { id: "mock-slayer", name: "Mock Exam Slayer", description: "Pass a full CAT simulation (100+ items)", emoji: "⚔️", test: (s) => s.sessions.some((x) => x.mode === "exam" && !x.source && x.passed && x.total >= 100) },
+  { id: "mock-slayer", name: "Mock Exam Slayer", description: "Pass a full-length exam simulation", emoji: "⚔️", test: (s) => s.sessions.some((x) => x.mode === "exam" && !x.source && x.passed && x.total >= TRACK.exam.fullLengthMin) },
   { id: "card-50", name: "Memory Athlete", description: "Review 50 flashcards", emoji: "🧠", test: (s) => Object.keys(s.cards).length >= 50 },
   { id: "perfect-10", name: "Flawless", description: "Score 10/10 on a Quick 10", emoji: "✨", test: (s) => s.sessions.some((x) => x.mode === "quick" && x.total === 10 && x.correct === 10) },
 ];
