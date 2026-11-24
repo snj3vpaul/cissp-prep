@@ -115,6 +115,13 @@ export const actions = {
       studyDays: bumpDay(s),
     }));
   },
+  /** Log a result taken on another platform (e.g. QuantumExams). No XP: it wasn't earned here. */
+  recordExternal(sum: SessionSummary) {
+    set((s) => ({ ...s, sessions: [...s.sessions, sum].sort((a, b) => a.ts - b.ts).slice(-500) }));
+  },
+  removeSession(id: string) {
+    set((s) => ({ ...s, sessions: s.sessions.filter((x) => x.id !== id) }));
+  },
   recordSession(sum: SessionSummary) {
     set((s) => ({ ...s, xp: s.xp + (sum.mode === "exam" ? 100 : 20), sessions: [...s.sessions, sum].slice(-500) }));
   },

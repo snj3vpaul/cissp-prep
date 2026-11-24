@@ -47,9 +47,9 @@ export function SessionHistory({ state, sessions, limit = 12 }: { state: AppStat
                   </div>
                   <div className="shrink-0 text-right">
                     <p className="text-[15px] font-semibold tabular-nums">
-                      {s.mode === "exam" && s.scaled !== undefined ? s.scaled : `${s.correct}/${s.total}`}
+                      {s.source ? (s.passed ? "Pass" : "Fail") : s.mode === "exam" && s.scaled !== undefined ? s.scaled : `${s.correct}/${s.total}`}
                     </p>
-                    <p className="text-[13px] font-medium tabular-nums text-sky-600 dark:text-sky-400">+{sessionXp(state, s)} XP</p>
+                    <p className="text-[13px] font-medium tabular-nums text-sky-600 dark:text-sky-400">{s.source ? "external" : `+${sessionXp(state, s)} XP`}</p>
                   </div>
                 </li>
               );

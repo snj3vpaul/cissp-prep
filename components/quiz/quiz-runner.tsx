@@ -7,6 +7,7 @@ import type { Question, QuizMode } from "@/lib/types";
 import { DOMAINS, type DomainId } from "@/lib/domains";
 import { actions, useAppState } from "@/lib/store";
 import { nextExamQuestion, planExam, scaledScore } from "@/lib/quiz";
+import { estimate, isPass, nextCatItem, shouldStop, toScaled, trajectory, verdict, type CatConfig } from "@/lib/cat";
 import { haptic, playSound } from "@/lib/feedback";
 import { Button } from "@/components/ui/button";
 import { DomainDot } from "@/components/ui/card";
@@ -27,6 +28,8 @@ interface Props {
   timeLimitSec?: number;
   /** Knowledge-check effort level, recorded with the session. */
   level?: number;
+  /** Computerized adaptive test: variable length, IRT ability estimate, confident stop. */
+  cat?: CatConfig;
   onRestart?: () => void;
 }
 
@@ -37,19 +40,23 @@ const fmt = (s: number) => {
   return `${h ? `${h}:` : ""}${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 };
 
-export function QuizRunner({ mode, title, domain, questions, exam = false, examItems = 125, timeLimitSec, level, onRestart }: Props) {
+export function QuizRunner({ mode, title, domain, questions, exam = false, examItems = 125, timeLimitSec, level, cat, onRestart }: Props) {
   const { settings } = useAppState();
   const reduce = useReducedMotion();
   const plan = useMemo(() => (exam ? planExam(examItems) : null), [exam, examItems]);
 
   const [served, setServed] = useState<Question[]>(() => {
+    if (cat) {
+      const first = nextCatItem(cat, [], null);
+      return first ? [first] : [];
+    }
     if (exam && plan) {
       const first = nextExamQuestion(plan, [], []);
       return first ? [first] : [];
     }
     return questions ?? [];
   });
-  const total = exam ? examItems : served.length;
+  const total = cat ? cat.max : exam ? examItems : served.length;
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -77,7 +84,10 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
     const now = Date.now();
     setFinishedAt(now);
     const correct = res.filter((r) => r.correct).length;
-    const scaled = exam ? scaledScore(res.map((r) => ({ difficulty: r.question.difficulty, correct: r.correct }))) : undefined;
+    const resp = res.map((r) => ({ difficulty: r.question.difficulty, correct: r.correct }));
+    const est = cat && res.length ? estimate(resp) : null;
+    const scaled = est ? toScaled(est.theta) : exam ? scaledScore(resp) : undefined;
+    const catPassed = cat && est ? isPass(verdict(cat, res.length, est)) : undefined;
     if (res.length) {
       actions.recordSession({
         id: `${now}`,
@@ -88,8 +98,10 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
         ms: now - startedAt,
         ts: now,
         scaled,
-        passed: exam ? (scaled ?? 0) >= 700 && res.length >= 100 : undefined,
+        passed: cat ? catPassed : exam ? (scaled ?? 0) >= 700 && res.length >= 100 : undefined,
         level,
+        cat: cat?.id,
+        traj: cat ? trajectory(resp).map((e) => toScaled(e.theta)) : undefined,
       });
     }
   }
@@ -127,6 +139,23 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
 
   function advance(res: QuizResult[] = results) {
     if (res.length >= total) return finish(res);
+    if (cat) {
+      const est = estimate(res.map((r) => ({ difficulty: r.question.difficulty, correct: r.correct })));
+      if (shouldStop(cat, res.length, est)) return finish(res);
+      const nq = nextCatItem(
+        cat,
+        res.map((r) => r.question),
+        est
+      );
+      if (!nq) return finish(res);
+      setServed((s) => [...s, nq]);
+      setIdx((i) => i + 1);
+      setSelected(null);
+      setSubmitted(false);
+      setShowHint(false);
+      requestAnimationFrame(() => headingRef.current?.focus());
+      return;
+    }
     if (exam && plan) {
       const nq = nextExamQuestion(
         plan,
@@ -188,6 +217,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
         mode={mode}
         exam={exam}
         totalPlanned={total}
+        cat={cat}
         durationMs={(finishedAt ?? startedAt) - startedAt}
         onRestart={onRestart}
       />
@@ -208,7 +238,8 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
       <div className="sticky top-14 z-20 lg:top-0 -mx-5 bg-background/80 px-5 pb-3 pt-3 backdrop-blur-xl sm:mx-0 sm:rounded-2xl sm:px-0">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
           <span className="font-mono text-muted-foreground">
-            {title} · {exam ? "Item" : "Question"} {idx + 1} of {total}
+            {title} · {exam ? "Item" : "Question"} {idx + 1}
+            {cat ? ` · ends between ${cat.min} and ${cat.max}` : ` of ${total}`}
           </span>
           <div className="flex items-center gap-2">
             {timeLimitSec ? (

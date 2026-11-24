@@ -29,6 +29,7 @@ const XP_BY_DIFF = { easy: 8, medium: 10, hard: 15 } as const;
 
 /** XP a session earned: its answers (same scoring as the store) plus the completion bonus. */
 export function sessionXp(state: AppState, s: SessionSummary) {
+  if (s.source) return 0;
   const from = s.ts - s.ms - 2000;
   let xp = s.mode === "exam" ? 100 : 20;
   for (const a of state.attempts) {
@@ -55,7 +56,7 @@ export function sessionTitle(s: SessionSummary) {
     case "missed":
       return "Missed review";
     case "exam":
-      return "Exam simulation";
+      return s.source === "quantumexams" ? "QuantumExams CAT" : s.cat === "mini" ? "Mini CAT" : s.cat === "full" ? "CAT simulation" : "Exam simulation";
     case "check":
       return `Knowledge check${s.level !== undefined ? ` · ${CHECK_LEVELS[s.level]?.name ?? ""}` : ""}`;
   }
@@ -63,6 +64,7 @@ export function sessionTitle(s: SessionSummary) {
 
 export function sessionKind(s: SessionSummary) {
   const mins = Math.max(1, Math.round(s.ms / 60000));
+  if (s.source === "quantumexams") return `Logged · ${s.total} items${s.external?.ability ? ` · ability ${s.external.ability}` : ""}`;
   const kind = s.mode === "exam" ? "Simulation" : s.mode === "domain" ? "Domain drill" : s.mode === "check" ? "Fact check" : "Mixed quiz";
   return `${kind} · ${mins} min`;
 }

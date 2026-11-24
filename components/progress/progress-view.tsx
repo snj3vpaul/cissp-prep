@@ -1,5 +1,7 @@
 "use client";
 
+import { sessionTitle } from "@/lib/derived";
+
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Copy, Lock } from "lucide-react";
@@ -15,7 +17,6 @@ import { AccuracyChart } from "@/components/progress/accuracy-chart";
 import { HeatCalendar } from "@/components/progress/heat-calendar";
 import { cn } from "@/lib/utils";
 
-const MODE_LABEL: Record<string, string> = { quick: "Quick 10", domain: "Domain drill", timed: "Timed 25", exam: "Exam sim", missed: "Missed review" };
 
 export function ProgressView() {
   const state = useAppState();
@@ -48,7 +49,7 @@ export function ProgressView() {
     accuracy: state.attempts.length ? Math.round((state.attempts.filter((a) => a.correct).length / state.attempts.length) * 100) : 0,
     bestStreak: streak.best,
     badges: Object.keys(state.badges).length,
-    simulationsPassed: state.sessions.filter((s) => s.mode === "exam" && s.passed).length,
+    simulationsPassed: state.sessions.filter((s) => s.mode === "exam" && !s.source && s.passed).length,
   };
 
   return (
@@ -189,12 +190,12 @@ export function ProgressView() {
               .map((s) => (
                 <li key={s.id} className="flex items-center justify-between gap-3 py-2.5 text-sm">
                   <span>
-                    <span className="font-medium">{MODE_LABEL[s.mode]}</span>
+                    <span className="font-medium">{sessionTitle(s)}</span>
                     {s.domain && <span className="text-muted-foreground"> · D{s.domain}</span>}
                     <span className="block text-xs text-muted-foreground">{new Date(s.ts).toLocaleString()}</span>
                   </span>
                   <span className="text-right font-mono tabular-nums">
-                    {s.scaled !== undefined ? `${s.scaled}/1000` : `${Math.round((s.correct / s.total) * 100)}%`}
+                    {s.source ? (s.passed ? "Pass" : "Fail") : s.scaled !== undefined ? `${s.scaled}/1000` : `${Math.round((s.correct / s.total) * 100)}%`}
                     <span className="block text-xs text-muted-foreground">
                       {s.correct}/{s.total}
                     </span>

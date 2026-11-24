@@ -16,6 +16,8 @@ import { ProgressRing } from "@/components/progress-ring";
 import { Rationale } from "@/components/quiz/rationale";
 import { StudyReferences } from "@/components/quiz/study-references";
 import { cn } from "@/lib/utils";
+import { bandScaled, estimate, isPass, toScaled, verdict, type CatConfig, type Verdict } from "@/lib/cat";
+import { ConfidenceGraph, DomainFeedback } from "@/components/exam/cat-results";
 
 export interface QuizResult {
   question: Question;
@@ -30,6 +32,8 @@ interface Props {
   exam?: boolean;
   totalPlanned: number;
   durationMs: number;
+  /** CAT session: verdict from the ability estimate, confidence graph and domain feedback. */
+  cat?: CatConfig;
   onRestart?: () => void;
 }
 
@@ -48,12 +52,23 @@ export function toFlashcard(q: Question): Flashcard {
   };
 }
 
-export function QuizReview({ results, mode, exam, totalPlanned, durationMs, onRestart }: Props) {
+export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat, onRestart }: Props) {
   const reduce = useReducedMotion();
   const correct = results.filter((r) => r.correct).length;
   const pct = results.length ? Math.round((correct / results.length) * 100) : 0;
-  const scaled = exam ? scaledScore(results.map((r) => ({ difficulty: r.question.difficulty, correct: r.correct }))) : null;
-  const passed = scaled !== null ? scaled >= 700 && results.length >= 100 : pct >= 70;
+  const items = useMemo(() => results.map((r) => ({ difficulty: r.question.difficulty, correct: r.correct, domain: r.question.domain })), [results]);
+  const est = cat && results.length ? estimate(items) : null;
+  const catVerdict = cat && est ? verdict(cat, results.length, est) : null;
+  const band = est ? bandScaled(est) : null;
+  const scaled = est ? toScaled(est.theta) : exam ? scaledScore(items) : null;
+  const passed = catVerdict ? isPass(catVerdict) : scaled !== null ? scaled >= 700 && results.length >= 100 : pct >= 70;
+  const catTitle: Record<Verdict, string> = {
+    pass: "Pass: confidently above the standard",
+    fail: "Fail: confidently below the standard",
+    "pass-at-max": "Pass at the maximum length",
+    "fail-at-max": "Fail at the maximum length",
+    incomplete: "Incomplete: fewer than the minimum items",
+  };
   const missed = results.filter((r) => !r.correct);
   const [sent, setSent] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
@@ -81,10 +96,11 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, onRe
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">{exam ? "Simulation complete" : "Session complete"}</p>
             <h1 className="mt-1 text-3xl font-bold">
-              {exam ? (passed ? "Pass — mission accomplished 🎯" : results.length < 100 ? "Ended early" : "Not yet — keep training") : pct >= 85 ? "Outstanding" : pct >= 70 ? "Solid work" : "Good reps — review the misses"}
+              {catVerdict ? catTitle[catVerdict] : exam ? (passed ? "Pass — mission accomplished 🎯" : results.length < 100 ? "Ended early" : "Not yet — keep training") : pct >= 85 ? "Outstanding" : pct >= 70 ? "Solid work" : "Good reps — review the misses"}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              {correct} of {results.length} correct{results.length < totalPlanned ? ` (${totalPlanned - results.length} not reached)` : ""} · {secs(durationMs)} total · {secs(avgMs)} avg per question
+              {correct} of {results.length} correct{!cat && results.length < totalPlanned ? ` (${totalPlanned - results.length} not reached)` : ""} · {secs(durationMs)} total · {secs(avgMs)} avg per question
+              {cat && band && ` · Ended after ${results.length} items (${cat.min}–${cat.max}). 95% range ${band.lo}–${band.hi}.`}
               {exam && " · Passing line 700/1000. Scaled score is an estimate, not ISC2's psychometric model."}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -112,6 +128,25 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, onRe
           </div>
         </div>
       </Card>
+
+      {cat && results.length > 0 && (
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <Card>
+            <CardTitle>Confidence graph</CardTitle>
+            <p className="mt-1 text-xs text-muted-foreground">How each answer moved the ability estimate. The test stops once the band clears the passing standard.</p>
+            <div className="mt-3">
+              <ConfidenceGraph items={items} />
+            </div>
+          </Card>
+          <Card>
+            <CardTitle>Domain feedback</CardTitle>
+            <p className="mt-1 text-xs text-muted-foreground">Right vs wrong per domain; bar length is how many items each domain received.</p>
+            <div className="mt-4">
+              <DomainFeedback items={items} />
+            </div>
+          </Card>
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>

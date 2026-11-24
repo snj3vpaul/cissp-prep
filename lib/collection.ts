@@ -67,6 +67,7 @@ const ALT = 850;
 const MODE_LABEL: Record<SessionSummary["mode"], string> = { quick: "Quick 10", timed: "Timed 25", missed: "Missed review", domain: "Domain drill", exam: "Exam simulation", check: "Knowledge check" };
 
 function sessionScore(s: SessionSummary) {
+  if (s.source) return s.passed ? 750 : 0; // outside platforms report pass/fail, not our scale
   if (s.mode === "exam" && s.scaled !== undefined) return s.scaled;
   return Math.round((s.correct / Math.max(1, s.total)) * 1000);
 }
@@ -84,8 +85,8 @@ export function qualifiers(state: AppState): Qualifier[] {
       ts: s.ts,
       score,
       domain: s.mode === "domain" ? s.domain : undefined,
-      legendary: s.mode === "exam" && !!s.passed,
-      source: `${MODE_LABEL[s.mode]} · ${s.mode === "exam" ? `${score}/1000` : `${s.correct}/${s.total}`}`,
+      legendary: s.mode === "exam" && !!s.passed && s.total >= 100,
+      source: s.source === "quantumexams" ? `QuantumExams CAT · pass (${s.total} items)` : `${s.cat === "mini" ? "Mini CAT" : MODE_LABEL[s.mode]} · ${s.mode === "exam" ? `${score}/1000` : `${s.correct}/${s.total}`}`,
     });
   }
   for (const [day, m] of Object.entries(state.memoryDays ?? {})) {
@@ -144,5 +145,5 @@ export function processCores(state: AppState): { grants: Grant[]; processed: str
 }
 
 export function hintFor(c: Creature) {
-  return c.domain === null ? "Pass a full exam simulation (700+ on 100+ items)." : `Score 700+ on a Domain ${c.domain} drill, or on any quiz, check or memory session once earlier cores are found.`;
+  return c.domain === null ? "Pass a full CAT of 100+ items, here or logged from QuantumExams." : `Score 700+ on a Domain ${c.domain} drill, or on any quiz, check or memory session once earlier cores are found.`;
 }

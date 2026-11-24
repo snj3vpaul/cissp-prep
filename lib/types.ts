@@ -69,6 +69,11 @@ export interface SessionSummary {
   scaled?: number; // exam simulation scaled score 0..1000
   passed?: boolean;
   level?: number; // knowledge-check effort level (0 Low … 4 Galaxy)
+  cat?: "full" | "mini"; // computerized adaptive test variant
+  traj?: number[]; // CAT: scaled ability estimate after each item
+  /** Logged from an outside practice platform rather than taken here. */
+  source?: "quantumexams";
+  external?: { ability?: string; domains?: Partial<Record<DomainId, number>>; notes?: string };
 }
 
 export interface Settings {
