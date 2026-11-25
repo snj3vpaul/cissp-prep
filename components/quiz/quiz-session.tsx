@@ -1,5 +1,7 @@
 "use client";
 
+import { TRACK } from "@/lib/track";
+
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -42,7 +44,7 @@ function QuizRun({ slug, n, onRestart }: { slug: string; n: number; onRestart: (
   }
 
   const mode: QuizMode = special ? (slug as QuizMode) : "domain";
-  const title = special ? special.title : `D${domain!.id} ${domain!.short}`;
+  const title = special ? special.title : `${TRACK.unit[0]}${domain!.id} ${domain!.short}`;
   return <QuizRunner mode={mode} title={title} domain={domain?.id} questions={set} timeLimitSec={special?.time} onRestart={onRestart} />;
 }
 

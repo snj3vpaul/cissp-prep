@@ -10,6 +10,7 @@ import { nextExamQuestion, planExam, scaledScore } from "@/lib/quiz";
 import { estimate, isPass, nextCatItem, shouldStop, toScaled, trajectory, verdict, type CatConfig } from "@/lib/cat";
 import { haptic, playSound } from "@/lib/feedback";
 import { Button } from "@/components/ui/button";
+import { TRACK } from "@/lib/track";
 import { DomainDot } from "@/components/ui/card";
 import { Rationale } from "@/components/quiz/rationale";
 import { StudyReferences } from "@/components/quiz/study-references";
@@ -287,7 +288,7 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
         >
           {!exam && (
             <p className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <DomainDot color={d.color} /> D{d.id} · {d.short} · {q.subObjective}
+              <DomainDot color={d.color} /> {TRACK.unit[0]}{d.id} · {d.short} · {q.subObjective}{q.k ? ` · K${q.k}` : ""}
               <span className="rounded-full border border-border px-2 py-0.5 capitalize">{q.difficulty}</span>
             </p>
           )}

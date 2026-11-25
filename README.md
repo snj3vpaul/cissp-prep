@@ -38,6 +38,23 @@ Edit `pocket/app.html` (UI) or `pocket/qbank.js` (questions, correct answer list
 npm run build:pocket   # writes public/pocket/index.html
 ```
 
+## ISTQB CTFL and Performance Testing micro-credential tracks
+
+The track switch in the sidebar (and the phone "More" menu) now has four tracks: **CISSP · CCSK v5 · CTFL v4 · Perf µ**. Each keeps its own progress. Every page (dashboard, quiz, knowledge check, flashcards, mnemonics, mastery, progress, cores, outline, resources) runs on the active track.
+
+**CTFL v4 — ISTQB Certified Tester Foundation Level, syllabus v4.0.1**
+- 128 original questions covering all 64 learning objectives, tagged with LO ID and K-level (K1 25 · K2 79 · K3 24). K3 items are worked scenarios like the real exam: equivalence partitions, 2- and 3-value boundary values, decision tables, state transitions, statement/branch coverage, three-point / ratio / extrapolation estimates, prioritization with dependencies, defect reports.
+- Every question cites the syllabus section **and the exact page that states the answer**, with a link that opens the PDF on that page (`…Syllabus_v4.0.1.pdf#page=N`). Terminology questions also cite the ISTQB Glossary; ISO/IEC 25010, 20246 and 29119 are cited where the syllabus refers to them.
+- Exam simulation built to the official ISTQB Exam Structure and Rules Tables v1.18: 40 questions, 60 minutes, closed book, 26/40 to pass, exactly Ch1 8 · Ch2 6 · Ch3 4 · Ch4 11 · Ch5 9 · Ch6 2 at K1 8 · K2 24 · K3 8, and a different LO for every question wherever the bank allows (the ISTQB distribution rule).
+- Outline page: exam facts, the blueprint table, every LO with K-level, section, page link and your accuracy.
+
+**Perf µ — AT*SQA Performance Testing Micro-Credential**
+- 45 original questions on the 14 learning objectives of the AT*SQA Performance Testing Body of Knowledge (labelled PT-1.1 … PT-5.2; AT*SQA doesn't number them).
+- Every question cites the Body of Knowledge's **footer page** (its printed table of contents is one page lower), and where the ISTQB CT-PT syllabus (2018) goes deeper, its exact page too.
+- Exam simulation in the micro-credential format: 10 questions, 20 minutes, open book. AT*SQA doesn't publish a cut score or section split, so the app uses 70% and spreads questions by LO count.
+
+Content lives in `data/istqb/` (`ctfl-outline.ts`, `ctfl-questions-a.ts`, `ctfl-questions-b.ts`, `ptmc.ts`, `index.ts`, `sources.ts`). Rows are append-only; `npm run validate` checks every LO is covered, K-levels match, rationales name the right letter, each question cites a page inside the document, the link opens that page, and the blueprint can be filled.
+
 ## Run locally
 
 ```bash

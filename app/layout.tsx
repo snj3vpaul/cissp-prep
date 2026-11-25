@@ -9,7 +9,7 @@ import { BadgeToaster } from "@/components/badge-toaster";
 
 export const metadata: Metadata = {
   title: { default: "Study cockpit", template: "%s · Study cockpit" },
-  description: "Personal CISSP and CCSK study cockpit.",
+  description: "Personal CISSP, CCSK, ISTQB CTFL and performance testing study cockpit.",
   robots: { index: false, follow: false, nocache: true },
   icons: { icon: "/icon.svg" },
 };

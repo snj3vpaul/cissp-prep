@@ -189,7 +189,7 @@ export function SettingsView() {
           </div>
           <div>
             <dt className="text-xs text-muted-foreground">Exam outline</dt>
-            <dd className="font-mono">{TRACK_ID === "cissp" ? `ISC2 · ${activeOutline().effectiveLabel}` : "CSA · CCSK v5 (2024)"}</dd>
+            <dd className="font-mono">{TRACK_ID === "cissp" ? `ISC2 · ${activeOutline().effectiveLabel}` : TRACK_ID === "ccsk" ? "CSA · CCSK v5 (2024)" : TRACK_ID === "ctfl" ? "ISTQB · CTFL Syllabus v4.0.1 (2024)" : "AT*SQA · Performance Testing BoK + ISTQB CT-PT 2018"}</dd>
           </div>
         </dl>
       </Card>

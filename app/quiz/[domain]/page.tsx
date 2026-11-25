@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { CCSK_DOMAINS, CISSP_DOMAINS } from "@/lib/domains";
+import { CCSK_DOMAINS, CISSP_DOMAINS, CTFL_DOMAINS, PTMC_DOMAINS } from "@/lib/domains";
 import { QuizSession } from "@/components/quiz/quiz-session";
 import { SPECIAL_MODES } from "@/lib/quiz-modes";
 
-const ALL = [...CISSP_DOMAINS, ...CCSK_DOMAINS];
+const ALL = [...CISSP_DOMAINS, ...CCSK_DOMAINS, ...CTFL_DOMAINS, ...PTMC_DOMAINS];
 
 export function generateStaticParams() {
   return [...ALL.map((d) => ({ domain: d.slug })), ...Object.keys(SPECIAL_MODES).map((k) => ({ domain: k }))];

@@ -1,4 +1,5 @@
-import { TRACK_ID } from "@/lib/track";
+import { byTrack } from "@/lib/track";
+import { CTFL_RESOURCES, PTMC_RESOURCES } from "@/data/istqb";
 import { CCSK_RESOURCES } from "@/data/ccsk/memory";
 /** Curated free study aids. Descriptions are honest one-liners — update if offers change. */
 export interface Resource {
@@ -69,4 +70,4 @@ const CISSP_RESOURCES: Resource[] = [
 ];
 
 /** Resources for the active study track. */
-export const RESOURCES: Resource[] = TRACK_ID === "ccsk" ? CCSK_RESOURCES : CISSP_RESOURCES;
+export const RESOURCES: Resource[] = byTrack({ cissp: CISSP_RESOURCES, ccsk: CCSK_RESOURCES, ctfl: CTFL_RESOURCES, ptmc: PTMC_RESOURCES });

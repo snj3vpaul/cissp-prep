@@ -1,6 +1,6 @@
 "use client";
 
-import { TRACK_ID } from "@/lib/track";
+import { TRACK, TRACK_ID } from "@/lib/track";
 
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -119,7 +119,7 @@ export function MnemonicVault() {
                     </div>
                   </button>
                 </DialogTrigger>
-                <DialogContent full title={`Domain ${d.id}: ${d.name}`} description={TRACK_ID === "cissp" ? `${d.weight}% of the exam · ${d.tagline}` : d.tagline}>
+                <DialogContent full title={`${TRACK.unit} ${d.id}: ${d.name}`} description={TRACK_ID === "cissp" ? `${d.weight}% of the exam · ${d.tagline}` : d.tagline}>
                   <div className="mx-auto aspect-square h-[calc(100%-4rem)] max-h-full max-w-full">
                     <Mindmap domain={d.id} />
                   </div>

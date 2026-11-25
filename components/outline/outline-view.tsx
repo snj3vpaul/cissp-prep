@@ -2,6 +2,7 @@
 
 import { TRACK_ID } from "@/lib/track";
 import { CcskOutline } from "@/components/outline/ccsk-outline";
+import { IstqbOutline } from "@/components/outline/istqb-outline";
 
 import Link from "next/link";
 import { useMemo } from "react";
@@ -32,6 +33,7 @@ function Section({ title, sub, children }: { title: string; sub?: string; childr
 }
 
 export function OutlineView() {
+  if (TRACK_ID === "ctfl" || TRACK_ID === "ptmc") return <IstqbOutline />;
   return TRACK_ID === "ccsk" ? <CcskOutline /> : <CisspOutline />;
 }
 

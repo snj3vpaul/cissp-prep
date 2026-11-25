@@ -1,4 +1,5 @@
-import { TRACK_ID } from "@/lib/track";
+import { byTrack } from "@/lib/track";
+import { CTFL_MNEMONICS, PTMC_MNEMONICS } from "@/data/istqb";
 import { CCSK_MNEMONICS } from "@/data/ccsk/memory";
 /** Memory hooks. Plain data — add your own by appending to the array. */
 export interface Mnemonic {
@@ -49,4 +50,4 @@ const CISSP_MNEMONICS: Mnemonic[] = [
 ];
 
 /** Mnemonics for the active study track. */
-export const MNEMONICS: Mnemonic[] = TRACK_ID === "ccsk" ? CCSK_MNEMONICS : CISSP_MNEMONICS;
+export const MNEMONICS: Mnemonic[] = byTrack({ cissp: CISSP_MNEMONICS, ccsk: CCSK_MNEMONICS, ctfl: CTFL_MNEMONICS, ptmc: PTMC_MNEMONICS });

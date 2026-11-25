@@ -17,7 +17,7 @@ import { TRACKS, TRACK_ID, switchTrack, type TrackId } from "@/lib/track";
 
 const FLIP_KEY = "cissp-command-center:flipped";
 
-/** CISSP ⇄ CCSK switch. Flips the page out, swaps track (reload), and flips the new one in. */
+/** Track switch (CISSP · CCSK · CTFL · Performance µ). Flips the page out, swaps track (reload), and flips the new one in. */
 function TrackToggle({ className, active }: { className?: string; active: TrackId | null }) {
   const [busy, setBusy] = useState(false);
   const go = (id: TrackId) => {

@@ -1,4 +1,5 @@
-import { TRACK_ID } from "@/lib/track";
+import { byTrack } from "@/lib/track";
+import { CTFL_MINDMAPS, PTMC_MINDMAPS } from "@/data/istqb";
 import { CCSK_MINDMAPS } from "@/data/ccsk/memory";
 /** Domain mindmaps rendered as radial SVG diagrams. Branches follow the 2024 outline sub-objectives. */
 export interface MindmapBranch {
@@ -84,4 +85,4 @@ const CISSP_MINDMAPS: Record<number, MindmapBranch[]> = {
 };
 
 /** Mindmaps for the active study track. */
-export const MINDMAPS: Record<number, MindmapBranch[]> = TRACK_ID === "ccsk" ? CCSK_MINDMAPS : CISSP_MINDMAPS;
+export const MINDMAPS: Record<number, MindmapBranch[]> = byTrack({ cissp: CISSP_MINDMAPS, ccsk: CCSK_MINDMAPS, ctfl: CTFL_MINDMAPS, ptmc: PTMC_MINDMAPS });

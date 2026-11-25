@@ -8,6 +8,7 @@ import { OSG, REFS } from "@/data/references";
 import type { RefKind } from "@/data/references/library";
 import { TRACK_ID } from "@/lib/track";
 import { CCSK_SOURCES } from "@/data/ccsk/outline";
+import { ISTQB_DOCS } from "@/data/istqb/sources";
 
 const KIND_LABEL: Record<RefKind, string> = {
   outline: "Exam outline",
@@ -69,7 +70,35 @@ export function ResourcesView() {
         ))}
       </ul>
 
-      {TRACK_ID === "ccsk" ? (
+      {TRACK_ID === "ctfl" || TRACK_ID === "ptmc" ? (
+        <section className="mt-16" aria-labelledby="library-heading">
+          <h2 id="library-heading" className="text-2xl font-bold">
+            Reference library
+          </h2>
+          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+            {TRACK_ID === "ctfl"
+              ? "Every CTFL question cites the section and exact page of the CTFL v4.0.1 syllabus that states its answer, with a link that opens the PDF on that page. Counts show how many questions cite each source."
+              : "Every question cites the exact footer page of AT*SQA’s Performance Testing Body of Knowledge, and the ISTQB CT-PT syllabus page where it covers the point in more depth. Counts show how many questions cite each source."}
+          </p>
+          <ul className="glass mt-6 divide-y divide-border/50 rounded-3xl p-5">
+            {(TRACK_ID === "ctfl" ? [ISTQB_DOCS.ctfl, ISTQB_DOCS.examTables, ISTQB_DOCS.ctflPage, ISTQB_DOCS.glossary] : [ISTQB_DOCS.ptmc, ISTQB_DOCS.ctpt, ISTQB_DOCS.ptmcPage, ISTQB_DOCS.ptmcFormat, ISTQB_DOCS.ctptPage]).map((r) => {
+              const n = QUESTIONS.filter((q) => q.references.some((x) => x.url?.split("#")[0] === r.url)).length;
+              return (
+                <li key={r.url}>
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" className="group flex items-start justify-between gap-3 py-2.5 text-sm">
+                    <span>
+                      <span className="font-medium group-hover:underline">{r.title}</span>
+                      <span className="block text-xs text-muted-foreground">{r.publisher}</span>
+                    </span>
+                    <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 font-mono text-xs tabular-nums text-muted-foreground">{n}</span>
+                    <span className="sr-only">(opens in a new tab)</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : TRACK_ID === "ccsk" ? (
         <section className="mt-16" aria-labelledby="library-heading">
           <h2 id="library-heading" className="text-2xl font-bold">
             Reference library

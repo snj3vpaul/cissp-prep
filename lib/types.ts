@@ -21,6 +21,8 @@ export interface Question {
   answerIndex: number;
   rationale: string; // why correct AND why others are wrong
   mindsetHint?: string; // "think like a manager" nudge
+  /** Cognitive level of the learning objective (ISTQB / AT*SQA K1–K4). */
+  k?: 1 | 2 | 3 | 4;
   references: Reference[]; // study references (outline objective, Official Study Guide chapter, authoritative sources)
 }
 

@@ -24,7 +24,7 @@ export function QuizHome() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {[...MODES, TRACK.exam.cat
           ? { href: "/exam", icon: Swords, title: "CAT exam simulation", body: "100–150 adaptive items, 3 hours, strictly in order, no going back.", meta: "3 h · adaptive" }
-          : { href: "/exam", icon: Swords, title: "CCSK exam simulation", body: `${TRACK.exam.items} questions across all 12 domains, ${TRACK.exam.minutes} minutes, ${TRACK.exam.passPct}% to pass.`, meta: `${TRACK.exam.minutes / 60} h · open book` }].map((m) => (
+          : { href: "/exam", icon: Swords, title: TRACK.exam.title ?? "Exam simulation", body: `${TRACK.exam.items} questions across all ${DOMAINS.length} ${TRACK.unit.toLowerCase()}s, ${TRACK.exam.minutes} minutes, ${TRACK.exam.passPct}% to pass.`, meta: `${TRACK.exam.minutes >= 60 ? `${TRACK.exam.minutes / 60} h` : `${TRACK.exam.minutes} min`} · ${TRACK.exam.openBook ? "open book" : "closed book"}` }].map((m) => (
           <Link key={m.href} href={m.href} className="glass group relative flex flex-col rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/50">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/25 to-cyan-400/20">
               <m.icon className="h-5 w-5 text-violet-500 dark:text-violet-300" aria-hidden />
@@ -48,7 +48,7 @@ export function QuizHome() {
                 <span className="inline-flex items-center gap-2">
                   <DomainDot color={d.color} /> DOMAIN {d.id}
                 </span>
-                {TRACK_ID === "cissp" ? <DomainWeight id={d.id} /> : `${Math.round(d.weight * 10) / 10}%`}
+                {TRACK_ID === "cissp" || TRACK.exam.blueprint ? <DomainWeight id={d.id} /> : `${Math.round(d.weight * 10) / 10}%`}
               </span>
               <span className="mt-2 font-display font-semibold leading-snug">{TRACK_ID === "cissp" ? <DomainName id={d.id} fallback={d.name} /> : d.name}</span>
               <span className="mt-auto pt-3 text-xs text-muted-foreground">{QUESTIONS_BY_DOMAIN[d.id]?.length ?? 0} questions</span>

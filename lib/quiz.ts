@@ -47,6 +47,35 @@ export function buildWeightedSet(n: number, attempts: Attempt[]): Question[] {
   return shuffle(out);
 }
 
+/**
+ * Build a fixed exam from an official blueprint (questions per domain and K-level). Where the
+ * bank allows, no two questions test the same learning objective, mirroring the ISTQB rule that
+ * when a group has fewer questions than LOs each question covers a different LO. Falls back to
+ * other K-levels in the same domain if a cell runs short.
+ */
+export function buildBlueprintSet(blueprint: { domain: number; k: number; n: number }[], attempts: Attempt[]): Question[] {
+  const used = new Set<string>();
+  const usedLo = new Set<string>();
+  const out: Question[] = [];
+  const take = (pool: Question[], n: number) => {
+    const ranked = prioritize(pool.filter((q) => !used.has(q.id)), attempts);
+    const fresh = ranked.filter((q) => !usedLo.has(q.subObjective));
+    const pick = [...fresh, ...ranked.filter((q) => usedLo.has(q.subObjective))].slice(0, n);
+    for (const q of pick) {
+      used.add(q.id);
+      usedLo.add(q.subObjective);
+      out.push(q);
+    }
+    return pick.length;
+  };
+  for (const row of blueprint) {
+    const pool = QUESTIONS_BY_DOMAIN[row.domain] ?? [];
+    const got = take(pool.filter((q) => q.k === row.k), row.n);
+    if (got < row.n) take(pool, row.n - got);
+  }
+  return shuffle(out);
+}
+
 export function buildDomainSet(domain: DomainId, n: number, attempts: Attempt[]): Question[] {
   return prioritize(QUESTIONS_BY_DOMAIN[domain], attempts).slice(0, n);
 }

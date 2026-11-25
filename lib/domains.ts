@@ -6,7 +6,7 @@
  */
 import { TRACK_ID } from "@/lib/track";
 
-/** 1–8 for CISSP, 1–12 for CCSK v5. */
+/** 1–8 CISSP, 1–12 CCSK v5, 1–6 CTFL, 1–5 Performance micro-credential. */
 export type DomainId = number;
 export type OutlineId = "2024" | "2027";
 export type OutlinePref = "auto" | OutlineId;
@@ -98,8 +98,38 @@ const CCSK_BASE: Omit<Domain, "weight">[] = [
 ];
 export const CCSK_DOMAINS: Domain[] = CCSK_BASE.map((d) => ({ ...d, weight: Math.round((100 / 12) * 100) / 100 }));
 
+/**
+ * ISTQB CTFL v4.0.1 syllabus chapters. Weight = share of the 40 exam questions in the official
+ * ISTQB Exam Structure Tables (8/6/4/11/9/2).
+ */
+export const CTFL_DOMAINS: Domain[] = [
+  { id: 1, slug: "ctfl-fundamentals-of-testing", name: "Fundamentals of Testing", short: "Fundamentals", color: "#3987E5", tagline: "Objectives, principles, test process, testware, roles, independence", weight: 20 },
+  { id: 2, slug: "ctfl-testing-throughout-sdlc", name: "Testing Throughout the SDLC", short: "SDLC", color: "#D95926", tagline: "SDLC impact, test-first, DevOps, shift left, levels & types, maintenance", weight: 15 },
+  { id: 3, slug: "ctfl-static-testing", name: "Static Testing", short: "Static", color: "#199E70", tagline: "Value of static testing, review process, roles, review types", weight: 10 },
+  { id: 4, slug: "ctfl-test-analysis-design", name: "Test Analysis and Design", short: "Techniques", color: "#C98500", tagline: "EP, BVA, decision tables, state transition, coverage, ATDD", weight: 27.5 },
+  { id: 5, slug: "ctfl-managing-test-activities", name: "Managing the Test Activities", short: "Management", color: "#D55181", tagline: "Planning, estimation, prioritization, risk, reporting, defects", weight: 22.5 },
+  { id: 6, slug: "ctfl-test-tools", name: "Test Tools", short: "Tools", color: "#9085E9", tagline: "Tool categories, benefits and risks of automation", weight: 5 },
+];
+
+/**
+ * AT*SQA Performance Testing Micro-Credential body of knowledge sections. Weight = share of the
+ * 14 learning objectives (AT*SQA publishes no per-section exam split).
+ */
+export const PTMC_DOMAINS: Domain[] = [
+  { id: 1, slug: "ptmc-purpose-of-performance-testing", name: "The Purpose of Performance Testing", short: "Purpose", color: "#3987E5", tagline: "Goals, requirements & stakeholder agreement, SDLC alignment", weight: 21.43 },
+  { id: 2, slug: "ptmc-risks-benefits-challenges", name: "Risks, Benefits and Challenges", short: "Risks", color: "#D95926", tagline: "Unique challenges, risks and benefits of performance testing", weight: 21.43 },
+  { id: 3, slug: "ptmc-performance-testing-approach", name: "Performance Testing Approach", short: "Approach", color: "#199E70", tagline: "Test plan components, objectives, metrics, environments, profiles", weight: 14.29 },
+  { id: 4, slug: "ptmc-conducting-performance-testing", name: "Conducting Performance Testing", short: "Conducting", color: "#C98500", tagline: "Preparation, execution, evaluation, risk- and objectives-based reports", weight: 28.57 },
+  { id: 5, slug: "ptmc-performance-test-tools", name: "Performance Test and Analysis Tools", short: "Tools", color: "#9085E9", tagline: "Why tools are essential, tool challenges and selection", weight: 14.29 },
+];
+
+/** Domain number of an objective code: "4.2" (CISSP/CCSK), "FL-4.2.2" (CTFL), "PT-3.1" (micro-credential). */
+export function domainOfSub(sub: string): number {
+  return Number(sub.replace(/^[A-Z]+-/, "").split(".")[0]);
+}
+
 /** Domains of the active study track. */
-export const DOMAINS: Domain[] = TRACK_ID === "ccsk" ? CCSK_DOMAINS : CISSP_DOMAINS;
+export const DOMAINS: Domain[] = TRACK_ID === "ccsk" ? CCSK_DOMAINS : TRACK_ID === "ctfl" ? CTFL_DOMAINS : TRACK_ID === "ptmc" ? PTMC_DOMAINS : CISSP_DOMAINS;
 
 export const EXAM_FORMAT = {
   minItems: 100,

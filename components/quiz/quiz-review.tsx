@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Check, ChevronDown, Layers, RotateCcw, X } from "lucide-react";
 import type { Flashcard, Question, QuizMode } from "@/lib/types";
-import { DOMAINS } from "@/lib/domains";
+import { DOMAINS, domainOfSub } from "@/lib/domains";
 import { actions } from "@/lib/store";
 import { scaledScore } from "@/lib/quiz";
 import { subObjectiveBreakdown } from "@/lib/stats";
@@ -179,7 +179,7 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat,
             </thead>
             <tbody>
               {breakdown.map((b) => {
-                const d = DOMAINS[Number(b.sub.split(".")[0]) - 1];
+                const d = DOMAINS[domainOfSub(b.sub) - 1];
                 return (
                   <tr key={b.sub} className="border-t border-border/50">
                     <td className="py-2 font-mono text-xs">

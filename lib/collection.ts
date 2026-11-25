@@ -1,3 +1,4 @@
+import { DOMAINS } from "@/lib/domains";
 import { TRACK } from "@/lib/track";
 import type { AppState, SessionSummary } from "@/lib/types";
 import type { DomainId } from "@/lib/domains";
@@ -26,7 +27,7 @@ export interface Creature {
 
 const cw = (name: string, body: string, shade: string, belly: string, accent: string, eye = "#1b1b22"): Colorway => ({ name, body, shade, belly, accent, eye });
 
-export const CREATURES: Creature[] = [
+const ALL_CREATURES: Creature[] = [
   { id: "aegiscale", name: "Aegiscale", domain: 1, blurb: "Rolls into a shield when risk appears. Its crest grows a point for every policy it enforces.", colorways: [cw("Charter", "#4C8BF5", "#2F63C4", "#DCE8FF", "#FFC23D"), cw("Board", "#1F2A44", "#121a2e", "#8FA3C8", "#F2D16B", "#F2D16B")] },
   { id: "vaultmole", name: "Vaultmole", domain: 2, blurb: "Digs a labelled tunnel for every asset and never forgets where it buried the keys.", colorways: [cw("Ledger", "#E07B4B", "#B85A2E", "#FBE1CF", "#3D3A3A"), cw("Archive", "#5B6B73", "#3E4B52", "#D7DEE2", "#F08A4B")] },
   { id: "pylonyx", name: "Pylonyx", domain: 3, blurb: "Grows crystal pylons along its spine, one for each layer of its defence in depth.", colorways: [cw("Quartz", "#2DB38A", "#1E8766", "#D3F5E8", "#9EE7FF"), cw("Obsidian", "#2B3138", "#1A1F24", "#7D8A96", "#5EF2C4", "#5EF2C4")] },
@@ -38,7 +39,9 @@ export const CREATURES: Creature[] = [
   { id: "cipherion", name: "Cipherion", domain: null, blurb: "Wakes only for someone who passes a full simulation. Its chest holds the master key.", colorways: [cw("Sovereign", "#F2B33D", "#C98A12", "#FFF0C9", "#6B3FD1"), cw("Eclipse", "#14131A", "#09090d", "#4A475C", "#F2B33D", "#F2B33D")] },
 ];
 
-export const CREATURE = Object.fromEntries(CREATURES.map((c) => [c.id, c])) as Record<string, Creature>;
+/** Creatures for the active track: one per domain/chapter (tracks with fewer than 8 drop the extras) plus the legendary. */
+export const CREATURES: Creature[] = ALL_CREATURES.filter((c) => c.domain === null || c.domain <= DOMAINS.length);
+export const CREATURE = Object.fromEntries(ALL_CREATURES.map((c) => [c.id, c])) as Record<string, Creature>;
 export const TOTAL_UNLOCKS = CREATURES.length * 2;
 
 export interface Grant {
@@ -146,5 +149,5 @@ export function processCores(state: AppState): { grants: Grant[]; processed: str
 }
 
 export function hintFor(c: Creature) {
-  return c.domain === null ? (TRACK.exam.cat ? "Pass a full CAT of 100+ items, here or logged from QuantumExams." : "Pass a full 60-question CCSK simulation.") : `Score 700+ on a Domain ${c.domain} drill, or on any quiz, check or memory session once earlier cores are found.`;
+  return c.domain === null ? (TRACK.exam.cat ? "Pass a full CAT of 100+ items, here or logged from QuantumExams." : `Pass a full ${TRACK.exam.items}-question ${TRACK.name} simulation.`) : `Score 700+ on a ${TRACK.unit} ${c.domain} drill, or on any quiz, check or memory session once earlier cores are found.`;
 }
