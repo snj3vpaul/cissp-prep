@@ -19,6 +19,7 @@ import { StudyReferences } from "@/components/quiz/study-references";
 import { cn } from "@/lib/utils";
 import { bandScaled, estimate, isPass, toScaled, verdict, type CatConfig, type Verdict } from "@/lib/cat";
 import { ConfidenceGraph, DomainFeedback } from "@/components/exam/cat-results";
+import { RaceClassification } from "@/components/race/race-classification";
 
 export interface QuizResult {
   question: Question;
@@ -133,6 +134,8 @@ export function QuizReview({ results, mode, exam, totalPlanned, durationMs, cat,
           </div>
         </div>
       </Card>
+
+      <RaceClassification results={results} totalPlanned={totalPlanned} />
 
       {passPct && results.length > 0 && (
         <Card>

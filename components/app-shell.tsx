@@ -13,6 +13,7 @@ import { dueCardCount } from "@/lib/derived";
 import { layoutStyle, useLayoutPrefs } from "@/lib/layout-prefs";
 import { cn } from "@/lib/utils";
 import { UnlockWatcher } from "@/components/collection/unlock-watcher";
+import { CroissantCoach } from "@/components/coach/croissant-coach";
 import { TRACKS, TRACK_ID, switchTrack, type TrackId } from "@/lib/track";
 
 const FLIP_KEY = "cissp-command-center:flipped";
@@ -218,6 +219,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <TabBar due={due} track={hydrated ? TRACK_ID : null} />
       <UnlockWatcher />
+      {hydrated && TRACK_ID === "cissp" && <CroissantCoach />}
     </div>
   );
 }

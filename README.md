@@ -55,6 +55,14 @@ The track switch in the sidebar (and the phone "More" menu) now has four tracks:
 
 Content lives in `data/istqb/` (`ctfl-outline.ts`, `ctfl-questions-a.ts`, `ctfl-questions-b.ts`, `ptmc.ts`, `index.ts`, `sources.ts`). Rows are append-only; `npm run validate` checks every LO is covered, K-levels match, rationales name the right letter, each question cites a page inside the document, the link opens that page, and the blueprint can be filled.
 
+## Race mode and the croissant coach
+
+**F1 race tracker (every track).** Each quiz, knowledge check and exam simulation is a race, and each question is a lap. You start at the back of a grid sized to the session (6–20 cars with invented three-letter codes; your code comes from your name in Settings). A correct answer overtakes the car ahead; once leading, correct answers build your gap. A wrong answer is a lock-up: two in a row and the car behind gets past, and when leading, misses eat the gap. Faster correct answers mean higher lap speed. The strip sits above each question and can be hidden with the eye button (remembered on this device). In exam simulations it shows right and wrong as you go, so hide it if you want strict exam conditions.
+
+At the chequered flag, the results screen shows your finishing position, places gained, overtakes, fastest lap, how many questions **topped your mind** (correct) and how many were **instant recall** (correct at or under your median time), **pole-position topics** (objectives you got fully right) and **Box, box: re-study** (missed objectives, worst first, with the question and a link to the chapter or the exact syllabus page). Logic: `lib/race.ts`; UI: `components/race/`.
+
+**Croissant coach (CISSP track).** A floating croissant keeps the strategies from *Proven CISSP Exam Strategies* (Destination Certification) in front of you: reading the question, the CEO / risk-advisor mindset, what to expect from CAT, the five question patterns, and exam-day advice, each with its page number (paraphrased in `data/cissp-strategies.ts`). It greets you on study pages, rotates a tip every two minutes, reacts when the question on screen uses BEST / MOST / PRIMARY, FIRST / NEXT or EXCEPT / NOT / LEAST, and puts exam-day tips first when your exam date is two days away or less. On phones, automatic tips wait as a badge while you're answering so they never cover the options. Tap it for a tip any time; "Quiet today" snoozes it until midnight.
+
 ## Run locally
 
 ```bash

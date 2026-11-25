@@ -16,6 +16,8 @@ import { Rationale } from "@/components/quiz/rationale";
 import { StudyReferences } from "@/components/quiz/study-references";
 import { QuizReview, type QuizResult } from "@/components/quiz/quiz-review";
 import { cn } from "@/lib/utils";
+import { RaceStrip } from "@/components/race/race-strip";
+import { driverCode, runRace } from "@/lib/race";
 
 interface Props {
   mode: QuizMode;
@@ -75,6 +77,12 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const q = served[idx];
+  const race = useMemo(() => runRace(results, Math.max(1, total), driverCode(settings.name)), [results, total, settings.name]);
+
+  // Let the study coach (CISSP croissant) react to the question on screen.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("coach:question", { detail: { stem: q && finishedAt === null ? q.stem : "", exam } }));
+  }, [q, exam, finishedAt]);
 
   // Start the per-question stopwatch whenever a new question is shown.
   useEffect(() => {
@@ -275,6 +283,8 @@ export function QuizRunner({ mode, title, domain, questions, exam = false, examI
           <motion.div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400" animate={{ width: `${progress}%` }} transition={{ type: "spring", stiffness: 80, damping: 20 }} />
         </div>
       </div>
+
+      <RaceStrip race={race} lap={idx + 1} />
 
       <AnimatePresence mode="wait">
         <motion.section
